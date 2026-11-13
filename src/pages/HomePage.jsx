@@ -1,38 +1,80 @@
-import React from 'react';
-import Layout from './Layout';
-import Section from '../components/Section';
-import ProductListing from '../components/ProductListing';
-import Gallery from '../components/Gallery';
-import { products } from '../data/products';
+import Layout from './Layout'
+import Section from '../components/Section'
+import ProductListing from '../components/ProductListing'
+import Gallery from '../components/Gallery'
+import { products } from '../data/products'
 
-const slides = [
-  { src: 'https://picsum.photos/id/101/1440/500', alt: 'Promoção 1' },
-  { src: 'https://picsum.photos/id/102/1440/500', alt: 'Promoção 2' },
-  { src: 'https://picsum.photos/id/103/1440/500', alt: 'Promoção 3' },
-];
-
-const HomePage = () => {
-  const produtosEmAlta = products.slice(0, 8);
+function HomePage() {
+  // Imagens do banner principal
+  const imagensBanner = [
+    { src: '/home-slide-1.jpeg' },
+    { src: '/home-slide-2.jpeg' },
+    { src: '/home-slide-3.jpeg' },
+    { src: '/home-slide-4.jpeg' },
+    { src: '/home-slide-5.jpeg' },
+    { src: '/home-slide-6.jpeg' },
+    { src: '/home-slide-7.jpeg' },
+    { src: '/home-slide-8.jpeg' },
+  ]
 
   return (
     <Layout>
-      <Gallery images={slides} height="420px" />
+      <main className="w-full">
 
-      <div className="max-w-7xl mx-auto px-4">
-        <Section title="Coleções em destaque" titleAlign="center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-primary/10 rounded-lg h-40 flex items-center justify-center font-semibold text-primary">Nova Coleção</div>
-            <div className="bg-secondary/30 rounded-lg h-40 flex items-center justify-center font-semibold">Ofertas</div>
-            <div className="bg-tertiary/10 rounded-lg h-40 flex items-center justify-center font-semibold text-tertiary">Mais Vendidos</div>
-          </div>
-        </Section>
+        {/* Banner principal */}
+        <Gallery
+          images={imagensBanner}
+          width="1440px"
+          height="681px"
+          className="mx-auto max-w-full"
+        />
 
-        <Section title="Produtos em alta" titleAlign="left" link={{ text: 'Ver todos →', href: '/products' }}>
-          <ProductListing products={produtosEmAlta} />
-        </Section>
-      </div>
+        <div className="max-w-[1200px] mx-auto px-4">
+
+          {/* Coleções em destaque */}
+          <Section
+            title="Coleções em destaque"
+            titleAlign="center"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+
+              <img
+                src="/collection-1.png"
+                alt="Coleção em destaque 1"
+                className="w-full rounded-[4px]"
+              />
+
+              <img
+                src="/collection-2.png"
+                alt="Coleção em destaque 2"
+                className="w-full rounded-[4px]"
+              />
+
+              <img
+                src="/collection-3.png"
+                alt="Coleção em destaque 3"
+                className="w-full rounded-[4px]"
+              />
+
+            </div>
+          </Section>
+
+          {/* Produtos em alta */}
+          <Section
+            title="Produtos em alta"
+            titleAlign="left"
+            link={{
+              text: 'Ver todos',
+              href: '/products',
+            }}
+          >
+            <ProductListing products={products} />
+          </Section>
+
+        </div>
+      </main>
     </Layout>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

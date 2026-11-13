@@ -1,48 +1,137 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react'
 
-// Gallery simples com setas e thumbs (estilo carrossel da Home)
-const Gallery = ({ images = [], width = '100%', height = '400px' }) => {
-  const [current, setCurrent] = useState(0);
+// Importando as setas
+import arrowLeft from '../assets/arrow-left.svg'
+import arrowRight from '../assets/arrow-right.svg'
 
-  if (!images.length) return null;
+function Gallery({
+  images,
+  className = '',
+  width,
+  height,
+  radius = '4px',
+  showThumbs = false,
+}) {
+  // Guarda o índice da imagem atual
+  const [index, setIndex] = useState(0)
 
-  const prev = () => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1));
-  const next = () => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1));
+  // Vai para a imagem anterior
+  function imagemAnterior() {
+    if (index > 0) {
+      setIndex(index - 1)
+    }
+  }
+
+  // Vai para a próxima imagem
+  function proximaImagem() {
+    if (index < images.length - 1) {
+      setIndex(index + 1)
+    }
+  }
 
   return (
-    <div className="relative overflow-hidden" style={{ width, height }}>
-      <img
-        src={images[current].src}
-        alt={images[current].alt || 'Slide'}
-        className="w-full h-full object-cover"
-      />
+    <div className={`flex flex-col gap-4 ${className}`}>
 
-      <button
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow"
+      {/* Área principal do slide */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          width: width,
+          height: height,
+          borderRadius: radius,
+        }}
       >
-        <ChevronLeft size={24} className="text-dark-gray" />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow"
-      >
-        <ChevronRight size={24} className="text-dark-gray" />
-      </button>
 
-      {/* Thumbs */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {images.map((img, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`w-3 h-3 rounded-full ${i === current ? 'bg-primary' : 'bg-white/70'}`}
+        {/* Faixa com todas as imagens */}
+        <div
+          className="flex h-full transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(-${index * 100}%)`,
+          }}
+        >
+          {images.map((image, i) => (
+            <img
+              key={i}
+              src={image.src}
+              alt={`Imagem ${i + 1}`}
+              className="w-full h-full shrink-0 object-cover"
+              style={{
+                borderRadius: radius,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Seta esquerda */}
+        <button
+          type="button"
+          onClick={imagemAnterior}
+          disabled={index === 0}
+          className={`absolute left-3 top-1/2 -translate-y-1/2 ${
+            index === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
+          }`}
+        >
+          <img
+            src={arrowLeft}
+            alt="Imagem anterior"
+            className="w-6 h-6"
           />
-        ))}
-      </div>
-    </div>
-  );
-};
+        </button>
 
-export default Gallery;
+        {/* Seta direita */}
+        <button
+          type="button"
+          onClick={proximaImagem}
+          disabled={index === images.length - 1}
+          className={`absolute right-3 top-1/2 -translate-y-1/2 ${
+            index === images.length - 1
+              ? 'opacity-30 cursor-not-allowed'
+              : 'opacity-100'
+          }`}
+        >
+          <img
+            src={arrowRight}
+            alt="Próxima imagem"
+            className="w-6 h-6"
+          />
+        </button>
+
+      </div>
+
+      {/* Miniaturas das imagens */}
+      {showThumbs && (
+        <div className="flex gap-3 flex-wrap">
+          {images.map((image, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIndex(i)}
+              className={`overflow-hidden ${
+                index === i
+                  ? 'border-2 border-primary'
+                  : 'border-2 border-transparent'
+              }`}
+              style={{
+                width: '117px',
+                height: '95px',
+                borderRadius: radius,
+              }}
+            >
+              <img
+                src={image.src}
+                alt={`Miniatura ${i + 1}`}
+                className="w-full h-full object-cover"
+                style={{
+                  borderRadius: radius,
+                }}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+    </div>
+  )
+}
+
+export default Gallery
