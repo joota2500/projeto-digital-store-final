@@ -28,3 +28,6 @@ backend/.env
 backend/node_modules
 backend/uploads/*
 !backend/uploads/.gitkeep
+
+# Front-end
+.env
