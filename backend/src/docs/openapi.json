@@ -3,7 +3,7 @@
   "info": {
     "title": "Digital Store API",
     "version": "1.0.0",
-    "description": "API do projeto Back-end Digital Store (Geração Tech / Digital College).\n\nAutor: João Victor Rocha Costa.\n\nAutenticação: nas rotas POST, PUT e DELETE (exceto cadastro e login) envie o cabeçalho `Authorization: Bearer <token>`.\n\nUsuário de demonstração (depois do seed):\n- e-mail: admin@digitalstore.com\n- senha: 123@123",
+    "description": "API do projeto Back-end Digital Store (Geração Tech / Digital College).\n\nAutor: João Victor Rocha Costa.\n\nAutenticação: nas rotas que pedem login (todas as de pedidos, e os POST, PUT e DELETE de categoria e produto, além de atualizar ou apagar usuário) envie o cabeçalho `Authorization: Bearer <token>`.\n\nUsuário de demonstração (depois do seed):\n- e-mail: admin@digitalstore.com\n- senha: 123@123",
     "contact": {
       "name": "João Victor Rocha Costa",
       "url": "https://github.com/joota2500"
@@ -27,6 +27,10 @@
     {
       "name": "Produtos",
       "description": "CRUD de produtos, imagens e opções"
+    },
+    {
+      "name": "Pedidos",
+      "description": "CRUD de pedidos do usuário logado (carrinho vira pedido no checkout)"
     }
   ],
   "components": {
@@ -261,6 +265,153 @@
             "example": 1
           }
         }
+      },
+      "ItemPedido": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "product_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "product_name": {
+            "type": "string",
+            "example": "K-Swiss V8 - Masculino"
+          },
+          "product_image": {
+            "type": "string",
+            "example": "http://localhost:3001/media/product-thumb-1.jpeg"
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 2
+          },
+          "size": {
+            "type": "string",
+            "example": "41",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "example": "#6FEEFF",
+            "nullable": true
+          },
+          "unit_price": {
+            "type": "number",
+            "example": 100
+          },
+          "subtotal": {
+            "type": "number",
+            "example": 200
+          }
+        }
+      },
+      "Pedido": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "pago",
+              "enviado",
+              "entregue",
+              "cancelado"
+            ],
+            "example": "pago"
+          },
+          "subtotal": {
+            "type": "number",
+            "example": 200
+          },
+          "shipping_cost": {
+            "type": "number",
+            "example": 0,
+            "description": "Frete grátis a partir de R$ 200; abaixo disso, R$ 19,90"
+          },
+          "total": {
+            "type": "number",
+            "example": 200
+          },
+          "recipient": {
+            "type": "string",
+            "example": "João Victor"
+          },
+          "zipcode": {
+            "type": "string",
+            "example": "60150-161"
+          },
+          "street": {
+            "type": "string",
+            "example": "Av. Santos Dumont"
+          },
+          "number": {
+            "type": "string",
+            "example": "1510"
+          },
+          "complement": {
+            "type": "string",
+            "example": "1 andar",
+            "nullable": true
+          },
+          "neighborhood": {
+            "type": "string",
+            "example": "Aldeota"
+          },
+          "city": {
+            "type": "string",
+            "example": "Fortaleza"
+          },
+          "state": {
+            "type": "string",
+            "example": "CE"
+          },
+          "payment_method": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "cartao",
+              "boleto"
+            ],
+            "example": "pix"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemPedido"
+            }
+          }
+        }
+      },
+      "ListaPedidos": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pedido"
+            }
+          }
+        }
       }
     },
     "responses": {
@@ -286,6 +437,16 @@
       },
       "NotFound": {
         "description": "Recurso não encontrado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Usuário autenticado, mas sem permissão para este recurso",
         "content": {
           "application/json": {
             "schema": {
@@ -1166,6 +1327,253 @@
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v1/order": {
+      "post": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Criar pedido",
+        "description": "Cria um pedido a partir dos itens do carrinho. O total é calculado com o preço do banco (usa price_with_discount quando houver desconto). O estoque é conferido e reduzido. Frete grátis a partir de R$ 200; abaixo disso, R$ 19,90. Pix e cartão entram com status pago (pagamento simulado); boleto fica pendente.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "items",
+                  "recipient",
+                  "zipcode",
+                  "street",
+                  "number",
+                  "neighborhood",
+                  "city",
+                  "state",
+                  "payment_method"
+                ],
+                "properties": {
+                  "recipient": {
+                    "type": "string",
+                    "example": "João Victor"
+                  },
+                  "zipcode": {
+                    "type": "string",
+                    "example": "60150-161"
+                  },
+                  "street": {
+                    "type": "string",
+                    "example": "Av. Santos Dumont"
+                  },
+                  "number": {
+                    "type": "string",
+                    "example": "1510"
+                  },
+                  "complement": {
+                    "type": "string",
+                    "example": "1 andar"
+                  },
+                  "neighborhood": {
+                    "type": "string",
+                    "example": "Aldeota"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Fortaleza"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "CE"
+                  },
+                  "payment_method": {
+                    "type": "string",
+                    "enum": [
+                      "pix",
+                      "cartao",
+                      "boleto"
+                    ],
+                    "example": "pix"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "product_id",
+                        "quantity"
+                      ],
+                      "properties": {
+                        "product_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "size": {
+                          "type": "string",
+                          "example": "41"
+                        },
+                        "color": {
+                          "type": "string",
+                          "example": "#6FEEFF"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Listar pedidos do usuário logado",
+        "description": "Devolve só os pedidos de quem está autenticado, do mais recente para o mais antigo.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pedidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListaPedidos"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/order/{id}": {
+      "get": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Buscar pedido pelo ID",
+        "description": "Só o dono do pedido consegue vê-lo. Se o pedido existir mas for de outra pessoa, a API responde 403.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v1/order/{id}/cancel": {
+      "put": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Cancelar pedido",
+        "description": "Só é possível cancelar pedidos com status pendente ou pago. O estoque dos itens é devolvido.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido cancelado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
