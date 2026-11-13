@@ -41,6 +41,7 @@ export default function HomePage() {
         width="1440"
         height="681"
         showDots
+        autoPlay
         className="mx-auto"
         slideClassName="max-sm:min-h-[200px] sm:max-md:min-h-[300px]"
       />
