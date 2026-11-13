@@ -7,7 +7,7 @@ import twitter from '../assets/twitter.svg'
 
 function Footer() {
   const informacoes = [
-    { text: 'Sobre Drip Store', link: '/about' },
+    { text: 'Sobre Digital Store', link: '/about' },
     { text: 'Segurança', link: '/seguranca' },
     { text: 'Wishlist', link: '/wishlist' },
     { text: 'Blog', link: '/blog' },
@@ -15,44 +15,44 @@ function Footer() {
     { text: 'Meus Pedidos', link: '/meus-pedidos' },
   ]
 
-  // Os links levam para a listagem com o termo de busca
+  // Links usam as categorias reais da loja (?category=slug)
   const categorias = [
-    { text: 'Camisetas', link: '/products?filter=camisetas' },
-    { text: 'Calças', link: '/products?filter=calças' },
-    { text: 'Bonés', link: '/products?filter=bonés' },
-    { text: 'Headphones', link: '/products?filter=headphones' },
-    { text: 'Tênis', link: '/products' },
+    { text: 'Casual', link: '/products?category=casual' },
+    { text: 'Esporte e lazer', link: '/products?category=esporte-lazer' },
+    { text: 'Corrida', link: '/products?category=corrida' },
+    { text: 'Utilitário', link: '/products?category=utilitario' },
+    { text: 'Todos os produtos', link: '/products' },
   ]
 
   const anoAtual = new Date().getFullYear()
 
   return (
     <footer className="bg-dark-gray text-white">
-      <div className="mx-auto max-w-360 px-4 pt-14 pb-8 md:px-10 md:pt-18 xl:px-25">
+      <div className="mx-auto max-w-360 px-4 pt-8 pb-5 md:px-10 md:pt-12 md:pb-7 xl:px-25">
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:gap-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-[minmax(0,1.3fr)_auto_auto_auto] lg:gap-x-12 lg:gap-y-0">
 
-          <div className="max-w-77.5">
-            <Logo variant="footer" />
+          <div className="col-span-2 max-w-md lg:col-span-1">
+            <Logo variant="footer" className="h-6 w-auto md:h-8" />
 
-            <p className="mt-8 text-base leading-7 text-justify">
+            <p className="mt-4 text-sm leading-6 text-white/85 md:mt-5">
               A Digital Store é a sua loja de tênis e moda online, com as melhores marcas e preços que cabem no bolso. Compre com segurança e receba no conforto da sua casa.
             </p>
 
-            <ul className="mt-8 flex items-center gap-6">
+            <ul className="mt-5 flex items-center gap-5">
               <li>
                 <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
-                  <img src={facebook} alt="" className="h-5 w-auto" />
+                  <img src={facebook} alt="" className="h-4 w-auto" />
                 </a>
               </li>
               <li>
                 <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
-                  <img src={instagram} alt="" className="h-5 w-auto" />
+                  <img src={instagram} alt="" className="h-4 w-auto" />
                 </a>
               </li>
               <li>
                 <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
-                  <img src={twitter} alt="" className="h-5 w-auto" />
+                  <img src={twitter} alt="" className="h-4 w-auto" />
                 </a>
               </li>
             </ul>
@@ -61,11 +61,10 @@ function Footer() {
           <FooterInfo title="Informação" informations={informacoes} />
           <FooterInfo title="Categorias" informations={categorias} />
 
-          <div>
-            <h3 className="mb-5 text-lg font-semibold">Contato</h3>
-            <address className="text-base leading-7 not-italic">
-              Av. Santos Dumont, 1510 - 1 andar -
-              <br />
+          <div className="col-span-2 sm:col-span-1">
+            <h3 className="mb-3 text-sm font-semibold md:text-base">Contato</h3>
+            <address className="text-sm leading-6 not-italic text-white/85">
+              Av. Santos Dumont, 1510 - 1 andar -<br />
               Aldeota, Fortaleza - CE, 60150-161
               <br />
               <br />
@@ -74,9 +73,9 @@ function Footer() {
           </div>
         </div>
 
-        <hr className="mt-12 border-dark-gray-3" />
+        <hr className="mt-8 border-dark-gray-3 md:mt-10" />
 
-        <p className="mt-8 text-center text-sm">
+        <p className="mt-5 text-center text-xs md:mt-6 md:text-sm">
           © {anoAtual} Digital Store
         </p>
       </div>

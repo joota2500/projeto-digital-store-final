@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 function FooterInfo({ title, informations }) {
   return (
     <div>
-      <h3 className="mb-5 text-lg font-semibold text-white">
+      <h3 className="mb-3 text-sm font-semibold text-white md:text-base">
         {title}
       </h3>
 
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-2">
         {informations.map((item) => {
           const isExternal =
             item.link.startsWith('http') ||
@@ -17,11 +17,11 @@ function FooterInfo({ title, informations }) {
           return (
             <li key={item.text}>
               {isExternal ? (
-                <a href={item.link} className="text-base text-white hover:underline">
+                <a href={item.link} className="text-sm text-white/85 hover:text-white hover:underline">
                   {item.text}
                 </a>
               ) : (
-                <Link to={item.link} className="text-base text-white hover:underline">
+                <Link to={item.link} className="text-sm text-white/85 hover:text-white hover:underline">
                   {item.text}
                 </Link>
               )}
