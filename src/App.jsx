@@ -5,6 +5,8 @@ import ProductListingPage from './pages/ProductListingPage';
 import ProductViewPage from './pages/ProductViewPage';
 import CategoriesPage from './pages/CategoriesPage';
 import ComingSoonPage from './pages/ComingSoonPage';
+import LoginPage from './pages/LoginPage';
+import CadastroPage from './pages/CadastroPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Sobe a página para o topo ao trocar de rota
@@ -37,10 +39,9 @@ function App() {
 
         <Route path="/categorias" element={<CategoriesPage />} />
 
-        {/* Rotas extras sem back-end: só um aviso de página em construção */}
         <Route path="/meus-pedidos" element={<ComingSoonPage />} />
-        <Route path="/cadastro" element={<ComingSoonPage />} />
-        <Route path="/login" element={<ComingSoonPage />} />
+        <Route path="/cadastro" element={<CadastroPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/entrar" element={<Navigate to="/login" replace />} />
 
         <Route path="*" element={<NotFoundPage />} />

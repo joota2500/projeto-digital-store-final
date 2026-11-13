@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Layout from './Layout';
 
-// Páginas que ainda não fazem parte deste projeto (sem back-end)
+// Página ainda em construção (Meus Pedidos)
 function ComingSoonPage() {
   return (
     <Layout>
