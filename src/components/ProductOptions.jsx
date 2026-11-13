@@ -1,8 +1,15 @@
 import { useState } from 'react';
 
 // Opções de tamanho (quadrado) ou cor (círculo)
-function ProductOptions({ options, radius = '4px', shape, type, label }) {
-  const [selected, setSelected] = useState(null);
+// Aceita value/onChange para o pai controlar a escolha (usado na página do produto)
+function ProductOptions({ options, radius = '4px', shape, type, label, value, onChange }) {
+  const [interno, setInterno] = useState(null);
+  const selected = value !== undefined ? value : interno;
+
+  function escolher(option) {
+    if (onChange) onChange(option);
+    else setInterno(option);
+  }
 
   return (
     <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
@@ -18,7 +25,7 @@ function ProductOptions({ options, radius = '4px', shape, type, label }) {
             role="radio"
             aria-checked={isSelected}
             aria-label={isColor ? `Cor ${option}` : `Tamanho ${option}`}
-            onClick={() => setSelected(option)}
+            onClick={() => escolher(option)}
             className={`flex items-center justify-center transition-colors ${
               isCircle ? 'size-[31px] rounded-full' : 'h-[46px] min-w-[46px] px-2'
             } ${

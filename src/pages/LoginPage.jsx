@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from './Layout';
 import { login } from '../services/api';
+import { destinoSeguro } from '../data/orders';
 
 const campo =
   'h-[60px] w-full rounded-lg bg-light-gray-3 px-5 text-base text-dark-gray-2 outline-none placeholder:text-light-gray';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const destino = destinoSeguro(params.get('redirect'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -23,7 +26,7 @@ function LoginPage() {
     try {
       await login(email.trim(), password);
       setSucesso('Login feito com sucesso!');
-      setTimeout(() => navigate('/'), 800);
+      setTimeout(() => navigate(destino), 800);
     } catch (err) {
       setErro(err.message || 'Não foi possível entrar.');
     } finally {
@@ -40,7 +43,7 @@ function LoginPage() {
           </h1>
           <p className="mt-2 text-sm text-dark-gray-3">
             Novo por aqui?{' '}
-            <Link to="/cadastro" className="font-bold text-primary hover:underline">
+            <Link to={destino === "/" ? "/cadastro" : `/cadastro?redirect=${encodeURIComponent(destino)}`} className="font-bold text-primary hover:underline">
               Cadastre-se
             </Link>
           </p>

@@ -10,21 +10,29 @@ import ProductOptions from '../components/ProductOptions';
 
 import { getProducts } from '../services/api';
 import { categoryLabels } from '../data/products';
+import { useCart } from '../context/CartContext';
 
 function ProductViewPage() {
   const { id } = useParams();
+  const { adicionar } = useCart();
 
   const [product, setProduct] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [adicionado, setAdicionado] = useState(false);
+  const [aviso, setAviso] = useState('');
+  const [tamanho, setTamanho] = useState(null);
+  const [cor, setCor] = useState(null);
 
   // Busca o produto e os recomendados quando o ID da URL muda
   useEffect(() => {
     setCarregando(true);
     setErro(null);
     setAdicionado(false);
+    setAviso('');
+    setTamanho(null);
+    setCor(null);
     setProduct(null);
 
     getProducts()
@@ -38,6 +46,24 @@ function ProductViewPage() {
       .catch(() => setErro('Não foi possível carregar o produto. Tente novamente.'))
       .finally(() => setCarregando(false));
   }, [id]);
+
+  function comprar() {
+    if (!product) return;
+    setAviso('');
+    setAdicionado(false);
+
+    if (product.sizes?.length && !tamanho) {
+      setAviso('Escolha um tamanho antes de comprar.');
+      return;
+    }
+    if (product.colors?.length && !cor) {
+      setAviso('Escolha uma cor antes de comprar.');
+      return;
+    }
+
+    adicionar({ product, size: tamanho, color: cor });
+    setAdicionado(true);
+  }
 
   if (carregando) {
     return (
@@ -114,7 +140,7 @@ function ProductViewPage() {
               price={product.price}
               priceDiscount={product.priceDiscount}
               description={product.description}
-              onBuy={() => setAdicionado(true)}
+              onBuy={comprar}
             >
               <div>
                 <h2 className="mb-2 text-sm font-bold text-light-gray">Tamanho</h2>
@@ -124,6 +150,8 @@ function ProductViewPage() {
                   type="text"
                   radius="4px"
                   label="Tamanho"
+                  value={tamanho}
+                  onChange={setTamanho}
                 />
               </div>
 
@@ -134,13 +162,24 @@ function ProductViewPage() {
                   shape="circle"
                   type="color"
                   label="Cor"
+                  value={cor}
+                  onChange={setCor}
                 />
               </div>
             </BuyBox>
 
+            {aviso && (
+              <p role="alert" className="mt-4 text-sm font-bold text-error">
+                {aviso}
+              </p>
+            )}
+
             {adicionado && (
               <p role="status" className="mt-4 text-sm font-bold text-success">
-                Produto adicionado ao carrinho!
+                Produto adicionado ao carrinho!{' '}
+                <Link to="/carrinho" className="underline hover:text-primary">
+                  Ver carrinho
+                </Link>
               </p>
             )}
           </div>

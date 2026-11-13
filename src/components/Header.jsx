@@ -4,6 +4,7 @@ import { Menu, Search, X } from 'lucide-react'
 import Logo from './Logo'
 import miniCart from '../assets/mini-cart.svg'
 import { getUsuarioLogado, logout } from '../services/api'
+import { useCart } from '../context/CartContext'
 
 const links = [
   { text: 'Home', to: '/' },
@@ -18,6 +19,7 @@ function Header() {
   const [busca, setBusca] = useState(searchParams.get('filter') ?? '')
   const [menuAberto, setMenuAberto] = useState(false)
   const [usuario, setUsuario] = useState(() => getUsuarioLogado())
+  const { quantidadeTotal } = useCart()
 
   // Atualiza o campo quando a busca vem pela URL
   useEffect(() => {
@@ -132,7 +134,14 @@ function Header() {
               </Link>
             </>
           )}
-          <img src={miniCart} alt="Carrinho de compras" className="size-6" />
+          <Link to="/carrinho" aria-label="Carrinho de compras" className="relative inline-flex">
+            <img src={miniCart} alt="" className="size-6" />
+            {quantidadeTotal > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-white">
+                {quantidadeTotal > 99 ? '99+' : quantidadeTotal}
+              </span>
+            )}
+          </Link>
         </div>
 
         {/* Navegação no desktop */}

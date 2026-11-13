@@ -7,6 +7,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import ComingSoonPage from './pages/ComingSoonPage';
 import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
+import CartPage from './pages/CartPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Sobe a página para o topo ao trocar de rota
@@ -39,6 +40,7 @@ function App() {
 
         <Route path="/categorias" element={<CategoriesPage />} />
 
+        <Route path="/carrinho" element={<CartPage />} />
         <Route path="/meus-pedidos" element={<ComingSoonPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/login" element={<LoginPage />} />

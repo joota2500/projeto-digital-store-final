@@ -246,3 +246,78 @@ export async function cadastrarUsuario({
 
   return dados
 }
+
+// Confere se a API está no ar (usado em Meus Pedidos e no checkout)
+export async function apiEstaNoAr() {
+  try {
+    const resposta = await fetch(`${API_BASE}/`, { signal: AbortSignal.timeout(3000) })
+    return resposta.ok
+  } catch {
+    return false
+  }
+}
+
+function erroDeRede() {
+  const erro = new Error(
+    'Os pedidos só funcionam com o back-end ligado. Rode o projeto com ./iniciar.sh para ver seus pedidos.'
+  )
+  erro.code = 'API_OFFLINE'
+  return erro
+}
+
+async function requisicaoAutenticada(caminho, opcoes = {}) {
+  const token = getToken()
+  if (!token) {
+    const erro = new Error('Faça login para continuar.')
+    erro.code = 'UNAUTHENTICATED'
+    throw erro
+  }
+
+  let resposta
+  try {
+    resposta = await fetch(`${API_BASE}${caminho}`, {
+      ...opcoes,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        ...(opcoes.headers || {}),
+      },
+    })
+  } catch {
+    throw erroDeRede()
+  }
+
+  if (resposta.status === 204) return null
+
+  const dados = await resposta.json().catch(() => ({}))
+  if (!resposta.ok) {
+    const erro = new Error(dados.message || 'Não foi possível concluir a requisição.')
+    erro.status = resposta.status
+    throw erro
+  }
+
+  return dados
+}
+
+// POST /v1/order  — transforma o carrinho em um pedido
+export async function criarPedido(corpo) {
+  return requisicaoAutenticada('/v1/order', {
+    method: 'POST',
+    body: JSON.stringify(corpo),
+  })
+}
+
+// GET /v1/order
+export async function listarPedidos() {
+  return requisicaoAutenticada('/v1/order')
+}
+
+// GET /v1/order/:id
+export async function buscarPedido(id) {
+  return requisicaoAutenticada(`/v1/order/${id}`)
+}
+
+// PUT /v1/order/:id/cancel
+export async function cancelarPedido(id) {
+  return requisicaoAutenticada(`/v1/order/${id}/cancel`, { method: 'PUT' })
+}

@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from './Layout';
 import { cadastrarUsuario, login } from '../services/api';
+import { destinoSeguro } from '../data/orders';
 
 const campo =
   'h-[60px] w-full rounded-lg bg-light-gray-3 px-5 text-base text-dark-gray-2 outline-none placeholder:text-light-gray';
 
 function CadastroPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const destino = destinoSeguro(params.get('redirect'));
   const [form, setForm] = useState({
     firstname: '',
     surname: '',
@@ -45,7 +48,7 @@ function CadastroPage() {
       });
       await login(form.email.trim(), form.password);
       setSucesso('Conta criada com sucesso!');
-      setTimeout(() => navigate('/'), 800);
+      setTimeout(() => navigate(destino), 800);
     } catch (err) {
       setErro(err.message || 'Não foi possível cadastrar.');
     } finally {
@@ -62,7 +65,7 @@ function CadastroPage() {
           </h1>
           <p className="mt-2 text-sm text-dark-gray-3">
             Já tem uma conta?{' '}
-            <Link to="/login" className="font-bold text-primary hover:underline">
+            <Link to={destino === "/" ? "/login" : `/login?redirect=${encodeURIComponent(destino)}`} className="font-bold text-primary hover:underline">
               Entrar
             </Link>
           </p>
