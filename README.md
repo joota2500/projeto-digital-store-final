@@ -25,7 +25,20 @@ Este repositório é a versão completa: o Front-end que já foi entregue e o Ba
 - Tailwind CSS v4
 - Lucide React (ícones)
 
-### Como rodar
+### Como rodar o Front-end e o Back-end juntos
+
+Deixe os dois no ar ao mesmo tempo, em terminais separados.
+
+1. No terminal do back-end (se ainda não estiver rodando):
+
+```bash
+cd backend
+npm run dev
+```
+
+A API fica em http://localhost:3001 e o Swagger em http://localhost:3001/api-docs
+
+2. No terminal do front-end, na raiz do projeto:
 
 ```bash
 npm install
@@ -34,25 +47,27 @@ npm run dev
 
 Abra http://localhost:5173
 
+O endereço da API pode ser trocado no arquivo `.env` (veja o `.env.example`). O padrão é `http://localhost:3001`.
+
 ### Páginas
 
 - `/` - Home
 - `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=` e `?category=`)
 - `/product/:id` - Visualização do produto
 - `/categorias` - Categorias da loja; ao clicar, abre a listagem já filtrada
-- `/login`, `/cadastro` e `/meus-pedidos` - Página em construção (sem back-end neste projeto)
+- `/login` - Login (POST /v1/user/token); o token fica no localStorage
+- `/cadastro` - Cadastro de usuário (POST /v1/user)
+- `/meus-pedidos` - Página em construção
 
-### API do Front-end (arquivo estático)
+### De onde vêm os produtos
 
-Por enquanto o Front-end ainda consome um JSON estático, sem banco:
+O Front-end busca os produtos na API do Back-end (`GET /v1/product/search` e `GET /v1/category/search`), no serviço `src/services/api.js`, pelas funções `getProducts()` e `getProductById(id)`. A resposta oficial da API (price, price_with_discount, category_ids, images e options) é convertida para o formato que as páginas já usavam (priceDiscount, category, images, sizes e colors).
 
-- Endereço: `/api/products.json` (arquivo em `public/api/products.json`)
+Se a API não estiver no ar (por exemplo, no site publicado na Vercel), o Front-end usa o JSON estático `/api/products.json` como reserva, para a loja continuar aparecendo.
 
-A aplicação consome essa API com `fetch` no serviço `src/services/api.js`, pelas funções `getProducts()` e `getProductById(id)`. As páginas Home, Listagem e Produto usam `useEffect` e `useState` para buscar os dados, mostrar "Carregando..." e exibir uma mensagem se a busca falhar.
+As funções auxiliares (formatação de preço, opções dos filtros e nomes das categorias) continuam em `src/data/products.js`. As páginas Home, Listagem, Produto e Categorias usam `useEffect` e `useState` para buscar os dados, mostrar "Carregando..." e exibir uma mensagem se a busca falhar.
 
-As funções auxiliares (formatação de preço, opções dos filtros e nomes das categorias) continuam em `src/data/products.js`.
-
-A API do Back-end (abaixo) já está pronta e documentada no Swagger. A ligação do Front-end com essa API pode ser feita depois, sem perder o que já foi entregue.
+Usuário de demonstração para login: **admin@digitalstore.com** / senha **123@123**.
 
 ### Observações
 
