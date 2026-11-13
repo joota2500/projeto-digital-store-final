@@ -19,11 +19,11 @@ const ProductCard = ({ product }) => {
       <div className="flex items-baseline gap-2">
         {temDesconto ? (
           <>
-            <span className="text-base text-light-gray line-through">R$ {price.toFixed(2)}</span>
-            <span className="text-2xl font-bold text-dark-gray">R$ {priceDiscount.toFixed(2)}</span>
+            <span className="text-base text-light-gray line-through">R$ {price.toFixed(2).replace('.', ',')}</span>
+            <span className="text-2xl font-bold text-dark-gray">R$ {priceDiscount.toFixed(2).replace('.', ',')}</span>
           </>
         ) : (
-          <span className="text-2xl font-bold text-dark-gray">R$ {price.toFixed(2)}</span>
+          <span className="text-2xl font-bold text-dark-gray">R$ {price.toFixed(2).replace('.', ',')}</span>
         )}
       </div>
     </Link>

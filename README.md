@@ -2,6 +2,15 @@
 
 Projeto final do curso de Front-end (Geração Tech / Digital College).
 
+## Links
+
+- Site publicado (Vercel): https://projeto-digital-store-shopee.vercel.app/
+- Repositório: https://github.com/joota2500/projeto-digital-store
+
+## Equipe
+
+- Artur Emilio Ivo Holanda
+
 ## Tecnologias
 
 - React 19 + Vite
@@ -21,11 +30,11 @@ Abra http://localhost:5173
 ## Páginas
 
 - `/` - Home
-- `/products` - Listagem de produtos (aceita `?filter=`)
+- `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=`)
 - `/product/:id` - Visualização do produto
 
 ## Observações
 
 - Dados mockados em `src/data/products.js`
 - Filtros e ordenação são visuais (conforme permitido na documentação)
-- Logo provisório em `public/logo.svg`
+- Imagens oficiais do projeto em `public/` e ícones em `src/assets/`

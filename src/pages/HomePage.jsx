@@ -19,7 +19,7 @@ function HomePage() {
 
   return (
     <Layout>
-      <main className="w-full">
+      <div className="w-full">
 
         {/* Banner principal */}
         <Gallery
@@ -72,7 +72,7 @@ function HomePage() {
           </Section>
 
         </div>
-      </main>
+      </div>
     </Layout>
   )
 }
