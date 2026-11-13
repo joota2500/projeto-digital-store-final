@@ -1,121 +1,49 @@
 # Digital Store
 
-Projeto final do curso (Geração Tech / Digital College).
+Olá, eu sou o [João Victor Rocha Costa](https://github.com/joota2500). Este é o meu projeto final do curso Geração Tech, da Digital College: uma loja de tênis online, com o site em React e uma API em Node.js ligada a um banco MySQL.
 
-## Autor
-
-- [João Victor Rocha Costa](https://github.com/joota2500)
+Eu entreguei o Front-end primeiro, num repositório só com o site. Depois copiei tudo para este repositório e construí o Back-end em cima, sem mexer na entrega original. Aqui o site busca os produtos no banco, dá para criar conta, entrar, montar um carrinho e acompanhar os pedidos.
 
 ## Links
 
-- Site publicado (Vercel, Front-end): https://projeto-digital-store-shopee.vercel.app/
-- Repositório deste projeto (Front + Back): https://github.com/joota2500/projeto-digital-store-final
-- Repositório da entrega do Front-end (sem banco): https://github.com/joota2500/projeto-digital-store
+- Site publicado (Vercel, só o Front-end): https://projeto-digital-store-shopee.vercel.app/
+- Este repositório (Front + Back): https://github.com/joota2500/projeto-digital-store-final
+- Entrega do Front-end (sem banco): https://github.com/joota2500/projeto-digital-store
+- Enunciado oficial do Back-end: https://github.com/digitalcollegebr/projeto-backend
 
-Este repositório é a versão completa: o Front-end que já foi entregue e o Back-end com banco de dados. O outro repositório (projeto-digital-store) permanece sem banco, como foi enviado no projeto de Front-end.
+O site na Vercel continua no ar mesmo sem a API. Quando o back-end não responde, a loja usa um JSON estático com os produtos. Carrinho, login e pedidos só funcionam de verdade com a API ligada no computador.
 
----
+## O que tem no projeto
 
-## Front-end
+No site dá para:
 
-### Tecnologias
+- ver a Home, a listagem com busca e filtros, as categorias e a página de cada produto
+- criar uma conta e entrar (o token JWT fica salvo no navegador)
+- adicionar um tênis ao carrinho, escolhendo tamanho e cor
+- finalizar a compra com endereço e forma de pagamento (Pix, cartão ou boleto — é uma simulação, para o curso)
+- acompanhar os pedidos em **Meus Pedidos**, com status, itens e a opção de cancelar enquanto o pedido ainda não foi enviado
 
-- React 19 + Vite
-- React Router
-- Tailwind CSS v4
-- Lucide React (ícones)
+Na API estão os CRUDs de usuários, categorias e produtos, o login com JWT, as rotas de pedidos e a documentação no Swagger.
 
-### Como rodar o Front-end e o Back-end juntos
+## Tecnologias
 
-Deixe os dois no ar ao mesmo tempo, em terminais separados.
+**Front-end** (na raiz do projeto): React 19, Vite, React Router, Tailwind CSS v4 e Lucide React.
 
-1. No terminal do back-end (se ainda não estiver rodando):
+**Back-end** (pasta `backend/`): Node.js, Express, Sequelize, MySQL, JWT, bcrypt, Swagger, Jest e Supertest.
 
-```bash
-cd backend
-npm run dev
-```
+O código do back-end está organizado em MVC (rotas, controllers, services e models), com comentários em português.
 
-A API fica em http://localhost:3001 e o Swagger em http://localhost:3001/api-docs
+## Como rodar
 
-2. No terminal do front-end, na raiz do projeto:
-
-```bash
-npm install
-npm run dev
-```
-
-Abra http://localhost:5173
-
-O endereço da API pode ser trocado no arquivo `.env` (veja o `.env.example`). O padrão é `http://localhost:3001`.
-
-### Páginas
-
-- `/` - Home
-- `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=` e `?category=`)
-- `/product/:id` - Visualização do produto
-- `/categorias` - Categorias da loja; ao clicar, abre a listagem já filtrada
-- `/login` - Login (POST /v1/user/token); o token fica no localStorage
-- `/cadastro` - Cadastro de usuário (POST /v1/user)
-- `/meus-pedidos` - Página em construção
-
-### De onde vêm os produtos
-
-O Front-end busca os produtos na API do Back-end (`GET /v1/product/search` e `GET /v1/category/search`), no serviço `src/services/api.js`, pelas funções `getProducts()` e `getProductById(id)`. A resposta oficial da API (price, price_with_discount, category_ids, images e options) é convertida para o formato que as páginas já usavam (priceDiscount, category, images, sizes e colors).
-
-Se a API não estiver no ar (por exemplo, no site publicado na Vercel), o Front-end usa o JSON estático `/api/products.json` como reserva, para a loja continuar aparecendo.
-
-As funções auxiliares (formatação de preço, opções dos filtros e nomes das categorias) continuam em `src/data/products.js`. As páginas Home, Listagem, Produto e Categorias usam `useEffect` e `useState` para buscar os dados, mostrar "Carregando..." e exibir uma mensagem se a busca falhar.
-
-Usuário de demonstração para login: **admin@digitalstore.com** / senha **123@123**.
-
-### Observações
-
-- A busca, os filtros e a ordenação da listagem funcionam no front-end
-- Imagens oficiais do projeto em `public/` e ícones em `src/assets/`
-
----
-
-
-## Execução rápida (back-end e front-end juntos)
-
-Com o MySQL ligado e o `backend/.env` preenchido, rode na raiz do projeto:
-
-```bash
-./iniciar.sh
-```
-
-ou
-
-```bash
-npm run start:all
-```
-
-Isso liga a API em http://localhost:3001 e o site em http://localhost:5173 no mesmo terminal. Para parar os dois, aperte Ctrl+C.
-
-## Back-end
-
-API REST na pasta `backend/`, com Express, Sequelize, MySQL e JWT, seguindo o repositório oficial [digitalcollegebr/projeto-backend](https://github.com/digitalcollegebr/projeto-backend).
-
-### Tecnologias
-
-- Node.js + Express.js
-- Sequelize + MySQL
-- JWT (jsonwebtoken) e bcrypt
-- Dotenv e Nodemon
-- Swagger UI (`/api-docs`)
-- Jest + Supertest
-
-### 1. Instalar o MySQL
-
-No Ubuntu / Linux Mint:
+Você precisa do Node.js e do MySQL. No Ubuntu / Linux Mint, o MySQL instala assim:
 
 ```bash
 sudo apt update
 sudo apt install mysql-server
+sudo systemctl enable --now mysql
 ```
 
-Depois abra o MySQL (`sudo mysql`) e rode:
+Depois abra o MySQL com `sudo mysql` e rode o seguinte, trocando `a_senha_que_voce_escolher` por uma senha sua:
 
 ```sql
 CREATE DATABASE digital_store;
@@ -126,11 +54,7 @@ GRANT ALL PRIVILEGES ON digital_store_test.* TO 'digital_store'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Escolha a senha que quiser e anote ela. Ela só fica no arquivo `backend/.env`, que não vai para o GitHub.
-
-### 2. Configurar o arquivo .env
-
-Na pasta `backend/` já existe um arquivo `.env` (e também um `.env.example` para copiar se precisar). Abra o `.env` e troque só a senha:
+A senha fica só no arquivo `backend/.env`, que não vai para o GitHub. Na pasta `backend/` já existe um `.env.example` para copiar, se precisar. Abra o `.env` e preencha assim:
 
 ```
 DB_HOST=localhost
@@ -143,9 +67,9 @@ JWT_SECRET=...
 PORT=3001
 ```
 
-Coloque em `DB_PASS` a mesma senha que você usou no `CREATE USER`. O `JWT_SECRET` já vem preenchido.
+Coloque em `DB_PASS` a mesma senha do `CREATE USER`. O `JWT_SECRET` já vem preenchido.
 
-### 3. Instalar, criar as tabelas e popular o banco
+Com o MySQL no ar e o `.env` pronto, crie as tabelas e coloque os dados de exemplo:
 
 ```bash
 cd backend
@@ -156,22 +80,56 @@ npx sequelize-cli db:seed:all
 
 O seed cria:
 
-- um usuário admin: **admin@digitalstore.com** / senha **123@123**
+- um usuário de demonstração: **admin@digitalstore.com** / senha **123@123**
 - as 4 categorias da loja (Casual, Esporte e lazer, Corrida e Utilitário)
 - os 15 produtos do Front-end, com imagens, tamanhos e cores
 
-### 4. Rodar a API
+Para ligar o site e a API juntos, volte para a raiz do projeto e rode:
 
 ```bash
+./iniciar.sh
+```
+
+ou, se preferir:
+
+```bash
+npm run start:all
+```
+
+Isso sobe a API em http://localhost:3001 e o site em http://localhost:5173 no mesmo terminal. A documentação das rotas fica em http://localhost:3001/api-docs. Para parar os dois, aperte Ctrl+C.
+
+Se quiser rodar em terminais separados:
+
+```bash
+# terminal 1, a API
+cd backend
+npm run dev
+
+# terminal 2, o site (na raiz do projeto)
+npm install
 npm run dev
 ```
 
-- API: http://localhost:3001
-- Documentação (Swagger): http://localhost:3001/api-docs
+O endereço da API no front pode ser trocado no arquivo `.env` da raiz (veja o `.env.example`). O padrão é `http://localhost:3001`.
 
 Para testar as rotas protegidas no Swagger, faça login em `POST /v1/user/token` com o admin, copie o token e clique em **Authorize**.
 
-### Endpoints
+## Páginas do site
+
+- `/` — Home
+- `/products` ou `/produtos` — listagem (aceita `?filter=` e `?category=`)
+- `/product/:id` — página do produto; o botão Comprar adiciona ao carrinho
+- `/categorias` — categorias da loja
+- `/carrinho` — carrinho, resumo e checkout (pede login para finalizar)
+- `/meus-pedidos` — lista dos pedidos de quem está logado
+- `/meus-pedidos/:id` — detalhes de um pedido, com opção de cancelar
+- `/login` e `/cadastro` — entrar ou criar conta
+
+A busca, os filtros e a ordenação da listagem rodam no próprio Front-end. As imagens oficiais do projeto estão em `public/` e os ícones em `src/assets/`.
+
+O Front-end busca produtos e categorias na API (`GET /v1/product/search` e `GET /v1/category/search`), no arquivo `src/services/api.js`. A resposta oficial (price, price_with_discount, category_ids, images e options) é convertida para o formato que as páginas já usavam. Se a API estiver desligada, ele cai no JSON `/api/products.json`.
+
+## Endpoints da API
 
 | Método | Rota | Auth | Descrição |
 |--------|------|------|-----------|
@@ -190,6 +148,10 @@ Para testar as rotas protegidas no Swagger, faça login em `POST /v1/user/token`
 | POST | `/v1/product` | sim | Cadastrar produto |
 | PUT | `/v1/product/:id` | sim | Atualizar produto |
 | DELETE | `/v1/product/:id` | sim | Deletar produto |
+| POST | `/v1/order` | sim | Criar pedido a partir do carrinho |
+| GET | `/v1/order` | sim | Listar os pedidos de quem está logado |
+| GET | `/v1/order/:id` | sim | Buscar um pedido (só o dono) |
+| PUT | `/v1/order/:id/cancel` | sim | Cancelar um pedido pendente ou pago |
 
 Busca de categorias: `limit`, `page`, `fields`, `use_in_menu`.
 
@@ -197,18 +159,20 @@ Busca de produtos: `limit`, `page`, `fields`, `match`, `category_ids`, `price-ra
 
 `limit=-1` devolve todos os itens (o padrão é 12).
 
-### Testes
+Nos pedidos, o total é calculado com o preço que está no banco (usa o desconto quando houver). O estoque é conferido e reduzido na hora da compra, e devolvido se o pedido for cancelado. Frete grátis a partir de R$ 200; abaixo disso, R$ 19,90. Pix e cartão entram com status pago (pagamento simulado); boleto fica pendente.
+
+## Testes
 
 ```bash
 cd backend
 npm test
 ```
 
-Os testes usam o banco `digital_store_test` e rodam as migrations e os seeds sozinhos.
+Os testes usam o banco `digital_store_test` e rodam as migrations e os seeds sozinhos. Eles cobrem os CRUDs, o login e as rotas de pedidos.
 
-### Decisões sobre o enunciado oficial
+## Decisões sobre o enunciado oficial
 
-O repositório oficial tem alguns trechos que se contradizem. Segui estas escolhas:
+O repositório oficial tem alguns trechos que se contradizem. Eu segui estas escolhas:
 
 - **Token ausente ou inválido responde 401**, e não 400. A seção 05 do enunciado cita 400, mas as próprias rotas de PUT e DELETE já listam 401, que é o status HTTP correto quando falta autenticação.
 - **POST /v1/user** e **POST /v1/user/token** são públicos. Se pedissem token, ninguém conseguiria se cadastrar nem fazer login.
@@ -217,9 +181,17 @@ O repositório oficial tem alguns trechos que se contradizem. Segui estas escolh
 - O **e-mail é único**. A senha é salva com **bcrypt** e **nunca é devolvida** nas respostas.
 - No cadastro, **confirmPassword** precisa ser igual a **password**.
 - Imagens enviadas em **base64** são gravadas na pasta `uploads/` e servidas em `/uploads`. As imagens que já existem no Front-end ficam em `/media`.
-- Ao apagar um produto, as imagens, as opções e as ligações com categorias também são removidas (**cascade**).
+- Ao apagar um produto, as imagens, as opções e as ligações com categorias também são removidas (**cascade**). Os itens de pedidos antigos guardam o nome e a imagem do produto, para o histórico não sumir.
 
-### Estrutura da pasta backend
+O carrinho e a página de Meus Pedidos não eram exigidos no enunciado. Eu incluí mesmo assim, para a loja ficar completa: o botão Comprar deixa de ser só um aviso e o pedido vai de verdade para o banco.
+
+## O que eu aprendi (e o que ainda quero fazer)
+
+Foi a primeira vez que eu montei sozinho uma API com banco, migrations, autenticação e testes, e liguei ela num site que já existia. A parte que mais me ensinou foi organizar o back-end em camadas e fazer o front conversar com a API sem quebrar a versão publicada na Vercel.
+
+Se eu continuar o projeto, o próximo passo seria colocar a API e o banco no ar (por exemplo no Render, com um MySQL online), para o site na Vercel também mostrar os pedidos de verdade. Fora isso, dá para evoluir o pagamento, o estoque na tela do produto e um painel para mudar o status do pedido (pago, enviado, entregue).
+
+## Estrutura da pasta backend
 
 ```
 backend/
