@@ -4,10 +4,11 @@ import HomePage from './pages/HomePage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductViewPage from './pages/ProductViewPage';
 import CategoriesPage from './pages/CategoriesPage';
-import ComingSoonPage from './pages/ComingSoonPage';
 import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import CartPage from './pages/CartPage';
+import OrdersPage from './pages/OrdersPage';
+import OrderDetailPage from './pages/OrderDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Sobe a página para o topo ao trocar de rota
@@ -41,7 +42,8 @@ function App() {
         <Route path="/categorias" element={<CategoriesPage />} />
 
         <Route path="/carrinho" element={<CartPage />} />
-        <Route path="/meus-pedidos" element={<ComingSoonPage />} />
+        <Route path="/meus-pedidos/:id" element={<OrderDetailPage />} />
+        <Route path="/meus-pedidos" element={<OrdersPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/entrar" element={<Navigate to="/login" replace />} />
