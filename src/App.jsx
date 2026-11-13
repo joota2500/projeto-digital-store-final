@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, useSearchParams } 
 import HomePage from './pages/HomePage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductViewPage from './pages/ProductViewPage';
+import CategoriesPage from './pages/CategoriesPage';
 import ComingSoonPage from './pages/ComingSoonPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -34,8 +35,9 @@ function App() {
         <Route path="/produtos" element={<RedirectToProducts />} />
         <Route path="/product/:id" element={<ProductViewPage />} />
 
+        <Route path="/categorias" element={<CategoriesPage />} />
+
         {/* Rotas extras sem back-end: só um aviso de página em construção */}
-        <Route path="/categorias" element={<ComingSoonPage />} />
         <Route path="/meus-pedidos" element={<ComingSoonPage />} />
         <Route path="/cadastro" element={<ComingSoonPage />} />
         <Route path="/login" element={<ComingSoonPage />} />

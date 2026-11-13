@@ -30,9 +30,10 @@ Abra http://localhost:5173
 ## Páginas
 
 - `/` - Home
-- `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=`)
+- `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=` e `?category=`)
 - `/product/:id` - Visualização do produto
-- `/login`, `/cadastro`, `/categorias` e `/meus-pedidos` - Página em construção (sem back-end neste projeto)
+- `/categorias` - Categorias da loja; ao clicar, abre a listagem já filtrada
+- `/login`, `/cadastro` e `/meus-pedidos` - Página em construção (sem back-end neste projeto)
 
 ## API
 

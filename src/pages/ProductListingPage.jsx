@@ -33,7 +33,8 @@ function correspondeABusca(produto, termo) {
 function ProductListingPage() {
   const [searchParams] = useSearchParams();
   const filter = searchParams.get('filter') ?? '';
-  const categoryParam = searchParams.get('category');
+  // Aceita ?category= ou ?categoria= (vindo da página de Categorias)
+  const categoryParam = searchParams.get('category') ?? searchParams.get('categoria');
   const brandParam = searchParams.get('brand');
 
   const [products, setProducts] = useState([]);
