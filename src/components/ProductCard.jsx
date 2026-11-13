@@ -1,33 +1,69 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Card de produto com preço original e desconto (preço riscado)
-const ProductCard = ({ product }) => {
-  const { id, name, image, price, priceDiscount } = product;
-  const temDesconto = priceDiscount && priceDiscount < price;
+// Card de produto individual
+// Mantém o Link para /product/${id}
+export default function ProductCard({ product }) {
+  if (!product) return null;
+
+  const {
+    id,
+    name,
+    image,
+    category,
+    price,
+    priceDiscount,
+  } = product;
+
+  // Formata preço com vírgula (ex: 299,90)
+  const formatPrice = (value) => {
+    return Number(value).toFixed(2).replace('.', ',');
+  };
 
   return (
-    <Link to={`/product/${id}`} className="group block">
-      <div className="bg-light-gray-3 rounded-lg overflow-hidden mb-3 aspect-[292/321] flex items-center justify-center">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-      <h3 className="text-sm text-dark-gray-2 line-clamp-2 mb-1">{name}</h3>
-      <div className="flex items-baseline gap-2">
-        {temDesconto ? (
-          <>
-            <span className="text-base text-light-gray line-through">R$ {price.toFixed(2).replace('.', ',')}</span>
-            <span className="text-2xl font-bold text-dark-gray">R$ {priceDiscount.toFixed(2).replace('.', ',')}</span>
-          </>
-        ) : (
-          <span className="text-2xl font-bold text-dark-gray">R$ {price.toFixed(2).replace('.', ',')}</span>
-        )}
+    <Link to={`/product/${id}`} className="block group">
+      <div className="bg-white rounded-[4px] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        {/* Imagem com fundo branco e selo de desconto */}
+        <div className="relative bg-white aspect-square">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+          {/* Selo 30% OFF quando houver priceDiscount */}
+          {priceDiscount && (
+            <span className="absolute top-3 left-3 bg-[#E7FF86] text-dark-gray-2 text-[14px] font-bold rounded-full px-3 py-1">
+              30% OFF
+            </span>
+          )}
+        </div>
+
+        {/* Informações do produto */}
+        <div className="p-4">
+          {/* Categoria acima do nome */}
+          {category && (
+            <p className="text-[12px] font-bold text-light-gray mb-1">
+              {category}
+            </p>
+          )}
+
+          {/* Nome do produto */}
+          <h3 className="text-dark-gray-2 font-medium mb-2 line-clamp-2">
+            {name}
+          </h3>
+
+          {/* Preços */}
+          <div className="flex items-center gap-2">
+            {priceDiscount && (
+              <span className="text-light-gray line-through text-sm">
+                R$ {formatPrice(price)}
+              </span>
+            )}
+            <span className="text-dark-gray font-bold text-[24px]">
+              R$ {formatPrice(priceDiscount || price)}
+            </span>
+          </div>
+        </div>
       </div>
     </Link>
   );
-};
-
-export default ProductCard;
+}

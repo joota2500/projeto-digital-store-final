@@ -1,137 +1,117 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-// Importando as setas
-import arrowLeft from '../assets/arrow-left.svg'
-import arrowRight from '../assets/arrow-right.svg'
+// Importando as setas (importar pelo JS funciona no build da Vercel)
+import arrowLeft from '../assets/arrow-left.svg';
+import arrowRight from '../assets/arrow-right.svg';
 
-function Gallery({
-  images,
+// Componente de Galeria de imagens (carrossel simples)
+// Props: images (array de src ou de { src }), className, width, height, radius, showThumbs,
+// showArrows (padrão true), showDots (padrão false)
+export default function Gallery({
+  images = [],
   className = '',
-  width,
-  height,
-  radius = '4px',
+  width = '100%',
+  height = '400px',
+  radius = '8px',
   showThumbs = false,
+  showArrows = true,
+  showDots = false,
 }) {
-  // Guarda o índice da imagem atual
-  const [index, setIndex] = useState(0)
+  const [current, setCurrent] = useState(0);
 
-  // Vai para a imagem anterior
-  function imagemAnterior() {
-    if (index > 0) {
-      setIndex(index - 1)
-    }
+  if (!images || images.length === 0) {
+    return <div>Nenhuma imagem disponível</div>;
   }
 
-  // Vai para a próxima imagem
-  function proximaImagem() {
-    if (index < images.length - 1) {
-      setIndex(index + 1)
-    }
-  }
+  // Aceita tanto '/foto.jpg' quanto { src: '/foto.jpg' }
+  const getSrc = (image) => (typeof image === 'string' ? image : image.src);
+
+  const next = () => {
+    setCurrent((prev) => (prev + 1) % images.length);
+  };
+
+  const prev = () => {
+    setCurrent((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goTo = (index) => {
+    setCurrent(index);
+  };
 
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
-
-      {/* Área principal do slide */}
+    <div className={`relative ${className}`} style={{ width }}>
+      {/* Slide principal */}
       <div
         className="relative overflow-hidden"
-        style={{
-          width: width,
-          height: height,
-          borderRadius: radius,
-        }}
+        style={{ height, borderRadius: radius }}
       >
+        <img
+          src={getSrc(images[current])}
+          alt={`Slide ${current + 1}`}
+          className="w-full h-full object-cover"
+        />
 
-        {/* Faixa com todas as imagens */}
-        <div
-          className="flex h-full transition-transform duration-500 ease-in-out"
-          style={{
-            transform: `translateX(-${index * 100}%)`,
-          }}
-        >
-          {images.map((image, i) => (
-            <img
-              key={i}
-              src={image.src}
-              alt={`Imagem ${i + 1}`}
-              className="w-full h-full shrink-0 object-cover"
-              style={{
-                borderRadius: radius,
-              }}
-            />
-          ))}
-        </div>
+        {/* Setas de navegação */}
+        {showArrows && images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
+              aria-label="Anterior"
+            >
+              <img src={arrowLeft} alt="Anterior" className="w-6 h-6" />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
+              aria-label="Próximo"
+            >
+              <img src={arrowRight} alt="Próximo" className="w-6 h-6" />
+            </button>
+          </>
+        )}
 
-        {/* Seta esquerda */}
-        <button
-          type="button"
-          onClick={imagemAnterior}
-          disabled={index === 0}
-          className={`absolute left-3 top-1/2 -translate-y-1/2 ${
-            index === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
-          }`}
-        >
-          <img
-            src={arrowLeft}
-            alt="Imagem anterior"
-            className="w-6 h-6"
-          />
-        </button>
-
-        {/* Seta direita */}
-        <button
-          type="button"
-          onClick={proximaImagem}
-          disabled={index === images.length - 1}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 ${
-            index === images.length - 1
-              ? 'opacity-30 cursor-not-allowed'
-              : 'opacity-100'
-          }`}
-        >
-          <img
-            src={arrowRight}
-            alt="Próxima imagem"
-            className="w-6 h-6"
-          />
-        </button>
-
+        {/* Bolinhas (dots) centralizadas na parte de baixo */}
+        {showDots && images.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {images.map((_, index) => (
+              <button
+                type="button"
+                key={index}
+                onClick={() => goTo(index)}
+                className={`w-[10px] h-[10px] rounded-full transition-colors ${
+                  index === current ? 'bg-primary' : 'bg-light-gray-2'
+                }`}
+                aria-label={`Ir para slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Miniaturas das imagens */}
-      {showThumbs && (
-        <div className="flex gap-3 flex-wrap">
-          {images.map((image, i) => (
+      {/* Miniaturas (thumbs) */}
+      {showThumbs && images.length > 1 && (
+        <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+          {images.map((image, index) => (
             <button
-              key={i}
               type="button"
-              onClick={() => setIndex(i)}
-              className={`overflow-hidden ${
-                index === i
-                  ? 'border-2 border-primary'
-                  : 'border-2 border-transparent'
+              key={index}
+              onClick={() => goTo(index)}
+              className={`flex-shrink-0 border-2 rounded overflow-hidden ${
+                index === current ? 'border-primary' : 'border-transparent'
               }`}
-              style={{
-                width: '117px',
-                height: '95px',
-                borderRadius: radius,
-              }}
             >
               <img
-                src={image.src}
-                alt={`Miniatura ${i + 1}`}
-                className="w-full h-full object-cover"
-                style={{
-                  borderRadius: radius,
-                }}
+                src={getSrc(image)}
+                alt={`Miniatura ${index + 1}`}
+                className="w-[117px] h-[95px] object-cover"
               />
             </button>
           ))}
         </div>
       )}
-
     </div>
-  )
+  );
 }
-
-export default Gallery

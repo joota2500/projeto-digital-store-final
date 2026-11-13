@@ -68,7 +68,7 @@ function ProductListingPage() {
               onChange={(e) => setOrder(e.target.value)}
               className="w-full h-[60px] px-4 border border-light-gray-2 rounded text-dark-gray-2 bg-white outline-none"
             >
-              <option value="">Selecione</option>
+              <option value="">Mais relevantes</option>
               <option value="menor">Menor preço</option>
               <option value="maior">Maior preço</option>
             </select>
@@ -143,7 +143,7 @@ function ProductListingPage() {
             title={`Resultados para "${filter || "todos os produtos"}" - ${filteredProducts.length} produtos`}
             titleAlign="left"
           >
-            <ProductListing products={filteredProducts} />
+            <ProductListing products={filteredProducts} columns={3} />
           </Section>
         </div>
 

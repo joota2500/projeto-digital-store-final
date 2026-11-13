@@ -112,7 +112,7 @@ function ProductViewPage() {
 
         {/* Produtos recomendados */}
         <Section
-          title="Produtos recomendados"
+          title="Produtos Relacionados"
           titleAlign="left"
           link={{
             text: "Ver todos",
