@@ -1,16 +1,56 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const STORAGE_KEY = 'digital_store_cart';
+const CHECKOUT_KEY = 'digital_store_checkout';
 const CartContext = createContext(null);
 
-function lerCarrinhoSalvo() {
+const checkoutPadrao = {
+  recipient: '',
+  zipcode: '',
+  street: '',
+  number: '',
+  complement: '',
+  neighborhood: '',
+  city: '',
+  state: 'CE',
+  payment_method: 'pix',
+};
+
+function lerJson(chave, fallback) {
   try {
-    const bruto = localStorage.getItem(STORAGE_KEY);
-    const lista = bruto ? JSON.parse(bruto) : [];
-    return Array.isArray(lista) ? lista : [];
+    const bruto = localStorage.getItem(chave);
+    const valor = bruto ? JSON.parse(bruto) : fallback;
+    return valor ?? fallback;
   } catch {
-    return [];
+    return fallback;
   }
+}
+
+function lerCarrinhoSalvo() {
+  const lista = lerJson(STORAGE_KEY, []);
+  return Array.isArray(lista) ? lista : [];
+}
+
+function lerCheckoutSalvo() {
+  const salvo = lerJson(CHECKOUT_KEY, null);
+  if (!salvo || typeof salvo !== 'object' || Array.isArray(salvo)) {
+    return { ...checkoutPadrao };
+  }
+  return { ...checkoutPadrao, ...salvo };
+}
+
+export function enderecoEstaPreenchido(checkout) {
+  if (!checkout) return false;
+  const cep = String(checkout.zipcode || '').replace(/\D/g, '');
+  return Boolean(
+    String(checkout.recipient || '').trim() &&
+      cep.length === 8 &&
+      String(checkout.street || '').trim() &&
+      String(checkout.number || '').trim() &&
+      String(checkout.neighborhood || '').trim() &&
+      String(checkout.city || '').trim() &&
+      checkout.state
+  );
 }
 
 // Identifica a mesma linha do carrinho (produto + tamanho + cor)
@@ -20,10 +60,15 @@ export function chaveItem(produtoId, size, color) {
 
 export function CartProvider({ children }) {
   const [itens, setItens] = useState(() => lerCarrinhoSalvo());
+  const [checkout, setCheckout] = useState(() => lerCheckoutSalvo());
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
   }, [itens]);
+
+  useEffect(() => {
+    localStorage.setItem(CHECKOUT_KEY, JSON.stringify(checkout));
+  }, [checkout]);
 
   const valor = useMemo(() => {
     function adicionar({ product, size, color, quantity = 1 }) {
@@ -73,6 +118,14 @@ export function CartProvider({ children }) {
       setItens([]);
     }
 
+    function atualizarCheckout(campo, valorCampo) {
+      setCheckout((atual) => ({ ...atual, [campo]: valorCampo }));
+    }
+
+    function limparCheckout() {
+      setCheckout({ ...checkoutPadrao });
+    }
+
     const quantidadeTotal = itens.reduce((soma, item) => soma + item.quantity, 0);
     const subtotal = itens.reduce((soma, item) => soma + item.unitPrice * item.quantity, 0);
 
@@ -84,8 +137,12 @@ export function CartProvider({ children }) {
       limpar,
       quantidadeTotal,
       subtotal,
+      checkout,
+      atualizarCheckout,
+      limparCheckout,
+      enderecoPreenchido: enderecoEstaPreenchido(checkout),
     };
-  }, [itens]);
+  }, [itens, checkout]);
 
   return <CartContext.Provider value={valor}>{children}</CartContext.Provider>;
 }

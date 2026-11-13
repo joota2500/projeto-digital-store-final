@@ -31,3 +31,6 @@ backend/uploads/*
 
 # Front-end
 .env
+
+# Capturas locais de revisão, não vão para o GitHub
+.checkout-review/

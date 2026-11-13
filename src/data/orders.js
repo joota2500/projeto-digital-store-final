@@ -61,3 +61,10 @@ export const ESTADOS_BR = [
   'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
   'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
 ]
+
+// Máscara simples de CEP (00000-000)
+export function formatarCep(valor) {
+  const digits = String(valor).replace(/\D/g, '').slice(0, 8)
+  if (digits.length <= 5) return digits
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`
+}

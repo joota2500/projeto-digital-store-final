@@ -7,6 +7,8 @@ import CategoriesPage from './pages/CategoriesPage';
 import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import CartPage from './pages/CartPage';
+import CheckoutEntregaPage from './pages/CheckoutEntregaPage';
+import CheckoutPagamentoPage from './pages/CheckoutPagamentoPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import ComingSoonPage from './pages/ComingSoonPage';
@@ -46,6 +48,8 @@ function App() {
         <Route path="/categorias" element={<CategoriesPage />} />
 
         <Route path="/carrinho" element={<CartPage />} />
+        <Route path="/carrinho/entrega" element={<CheckoutEntregaPage />} />
+        <Route path="/carrinho/pagamento" element={<CheckoutPagamentoPage />} />
         <Route path="/meus-pedidos/:id" element={<OrderDetailPage />} />
         <Route path="/meus-pedidos" element={<OrdersPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />

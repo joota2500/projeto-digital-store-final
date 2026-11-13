@@ -20,7 +20,7 @@ No site dá para:
 - ver a Home, a listagem com busca e filtros, as categorias e a página de cada produto
 - criar uma conta e entrar (o token JWT fica salvo no navegador)
 - adicionar um tênis ao carrinho, escolhendo tamanho e cor
-- finalizar a compra com endereço e forma de pagamento (Pix, cartão ou boleto — é uma simulação, para o curso)
+- finalizar a compra em 3 etapas (carrinho, entrega e pagamento), com Pix, cartão ou boleto — é uma simulação, para o curso
 - acompanhar os pedidos em **Meus Pedidos**, com status, itens e a opção de cancelar enquanto o pedido ainda não foi enviado
 
 Na API estão os CRUDs de usuários, categorias e produtos, o login com JWT, as rotas de pedidos e a documentação no Swagger.
@@ -120,7 +120,9 @@ Para testar as rotas protegidas no Swagger, faça login em `POST /v1/user/token`
 - `/products` ou `/produtos` — listagem (aceita `?filter=` e `?category=`)
 - `/product/:id` — página do produto; o botão Comprar adiciona ao carrinho
 - `/categorias` — categorias da loja
-- `/carrinho` — carrinho, resumo e checkout (pede login para finalizar)
+- `/carrinho` — itens do carrinho e resumo do pedido
+- `/carrinho/entrega` — endereço de entrega (pede login)
+- `/carrinho/pagamento` — forma de pagamento e finalização da compra
 - `/meus-pedidos` — lista dos pedidos de quem está logado
 - `/meus-pedidos/:id` — detalhes de um pedido, com opção de cancelar
 - `/login` e `/cadastro` — entrar ou criar conta
