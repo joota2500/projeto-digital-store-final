@@ -35,6 +35,13 @@ O código do back-end está organizado em MVC (rotas, controllers, services e mo
 
 ## Como rodar
 
+Primeiro baixe o projeto e entre na pasta:
+
+```bash
+git clone https://github.com/joota2500/projeto-digital-store-final.git
+cd projeto-digital-store-final
+```
+
 Você precisa do Node.js e do MySQL. No Ubuntu / Linux Mint, o MySQL instala assim:
 
 ```bash
@@ -54,7 +61,13 @@ GRANT ALL PRIVILEGES ON digital_store_test.* TO 'digital_store'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-A senha fica só no arquivo `backend/.env`, que não vai para o GitHub. Na pasta `backend/` já existe um `.env.example` para copiar, se precisar. Abra o `.env` e preencha assim:
+A senha fica só no arquivo `backend/.env`, que não vai para o GitHub. Para criar esse arquivo, copie o exemplo que já vem no projeto:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Depois abra o `backend/.env` e preencha assim:
 
 ```
 DB_HOST=localhost
