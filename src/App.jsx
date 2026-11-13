@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductListingPage />} />
+        <Route path="/produtos" element={<ProductListingPage />} />
         <Route path="/product/:id" element={<ProductViewPage />} />
         {/* rotas extras só para não dar 404 nos links do menu */}
         <Route path="/categorias" element={<HomePage />} />
