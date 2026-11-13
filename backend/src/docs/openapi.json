@@ -1,0 +1,1177 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Digital Store API",
+    "version": "1.0.0",
+    "description": "API do projeto Back-end Digital Store (Geração Tech / Digital College).\n\nAutor: João Victor Rocha Costa.\n\nAutenticação: nas rotas POST, PUT e DELETE (exceto cadastro e login) envie o cabeçalho `Authorization: Bearer <token>`.\n\nUsuário de demonstração (depois do seed):\n- e-mail: admin@digitalstore.com\n- senha: 123@123",
+    "contact": {
+      "name": "João Victor Rocha Costa",
+      "url": "https://github.com/joota2500"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Servidor local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Usuários",
+      "description": "CRUD de usuários e login"
+    },
+    {
+      "name": "Categorias",
+      "description": "CRUD de categorias"
+    },
+    {
+      "name": "Produtos",
+      "description": "CRUD de produtos, imagens e opções"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Erro": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Mensagem de erro"
+          }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "firstname": {
+            "type": "string",
+            "example": "João"
+          },
+          "surname": {
+            "type": "string",
+            "example": "Victor"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@mail.com"
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "Categoria": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Casual"
+          },
+          "slug": {
+            "type": "string",
+            "example": "casual"
+          },
+          "use_in_menu": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "ListaCategorias": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Categoria"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "example": 4
+          },
+          "limit": {
+            "type": "integer",
+            "example": 12
+          },
+          "page": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "ImagemProduto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "content": {
+            "type": "string",
+            "example": "http://localhost:3001/media/product-thumb-1.jpeg"
+          }
+        }
+      },
+      "OpcaoProduto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Tamanho"
+          },
+          "shape": {
+            "type": "string",
+            "enum": [
+              "square",
+              "circle"
+            ],
+            "example": "square"
+          },
+          "radius": {
+            "type": "integer",
+            "example": 0
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "color"
+            ],
+            "example": "text"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "39",
+              "40",
+              "41"
+            ]
+          }
+        }
+      },
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "name": {
+            "type": "string",
+            "example": "K-Swiss V8 - Masculino"
+          },
+          "slug": {
+            "type": "string",
+            "example": "k-swiss-v8-masculino"
+          },
+          "use_in_menu": {
+            "type": "boolean",
+            "example": false
+          },
+          "stock": {
+            "type": "integer",
+            "example": 10
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "example": 200
+          },
+          "price_with_discount": {
+            "type": "number",
+            "example": 100
+          },
+          "category_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              2
+            ]
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImagemProduto"
+            }
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpcaoProduto"
+            }
+          }
+        }
+      },
+      "ListaProdutos": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Produto"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "example": 15
+          },
+          "limit": {
+            "type": "integer",
+            "example": 12
+          },
+          "page": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Dados da requisição incorretos",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Token não enviado ou inválido",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Recurso não encontrado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/v1/user": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Cadastrar usuário",
+        "description": "Rota pública. Não precisa de token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "firstname",
+                  "surname",
+                  "email",
+                  "password",
+                  "confirmPassword"
+                ],
+                "properties": {
+                  "firstname": {
+                    "type": "string",
+                    "example": "João"
+                  },
+                  "surname": {
+                    "type": "string",
+                    "example": "Victor"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "joao@mail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123@123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "123@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/v1/user/token": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Gerar token JWT (login)",
+        "description": "Rota pública. O token vale por 24 horas.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "admin@digitalstore.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token gerado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/v1/user/{id}": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Buscar usuário pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Atualizar usuário",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstname": {
+                    "type": "string"
+                  },
+                  "surname": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "confirmPassword": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Atualizado com sucesso (sem corpo)"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Deletar usuário",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removido com sucesso (sem corpo)"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v1/category/search": {
+      "get": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Listar categorias",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 12
+            },
+            "description": "Itens por página. Use -1 para trazer todos."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Página. Ignorado quando limit = -1."
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "name,slug"
+            },
+            "description": "Campos retornados, separados por vírgula."
+          },
+          {
+            "name": "use_in_menu",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filtra categorias que aparecem no menu."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de categorias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListaCategorias"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/v1/category": {
+      "post": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Cadastrar categoria",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "slug"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Shoes"
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "shoes"
+                  },
+                  "use_in_menu": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Categoria criada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categoria"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/category/{id}": {
+      "get": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Buscar categoria pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Categoria encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categoria"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Atualizar categoria",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "use_in_menu": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Atualizada com sucesso (sem corpo)"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Deletar categoria",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removida com sucesso (sem corpo)"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/v1/product/search": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Listar produtos",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 12
+            },
+            "description": "Itens por página. Use -1 para trazer todos."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "name,images,price"
+            }
+          },
+          {
+            "name": "match",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "Tênis"
+            },
+            "description": "Busca no nome ou na descrição."
+          },
+          {
+            "name": "category_ids",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "1,3"
+            },
+            "description": "IDs de categorias, separados por vírgula."
+          },
+          {
+            "name": "price-range",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "100-200"
+            },
+            "description": "Faixa de preço (campo price)."
+          },
+          {
+            "name": "option[id]",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "GG,PP"
+            },
+            "description": "Filtra pelo valor de uma opção. Ex: option[45]=GG,PP"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListaProdutos"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/v1/product": {
+      "post": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Cadastrar produto",
+        "description": "As imagens podem ser enviadas em base64. O campo radius aceita número ou string ('4px'). As opções aceitam `value` ou `values`.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "slug",
+                  "price",
+                  "price_with_discount"
+                ],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Produto 01"
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "produto-01"
+                  },
+                  "use_in_menu": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "stock": {
+                    "type": "integer",
+                    "example": 10
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 119.9
+                  },
+                  "price_with_discount": {
+                    "type": "number",
+                    "example": 99.9
+                  },
+                  "category_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "example": [
+                      1
+                    ]
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "image/png"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Base64 da imagem"
+                        }
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "Tamanho"
+                        },
+                        "shape": {
+                          "type": "string",
+                          "example": "square"
+                        },
+                        "radius": {
+                          "description": "Número ou string com px, ex: 4 ou '4px'",
+                          "example": "4px"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "text"
+                        },
+                        "value": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "PP",
+                            "M",
+                            "GG"
+                          ]
+                        },
+                        "values": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produto criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/product/{id}": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Buscar produto pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Atualizar produto",
+        "description": "Para imagens e opções: envie `id` + `deleted: true` para apagar, `id` + novos dados para atualizar, ou um item sem `id` para criar.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "use_in_menu": {
+                    "type": "boolean"
+                  },
+                  "stock": {
+                    "type": "integer"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "price_with_discount": {
+                    "type": "number"
+                  },
+                  "category_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Atualizado com sucesso (sem corpo)"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Deletar produto",
+        "description": "Remove também as imagens, opções e ligações com categorias (cascade).",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removido com sucesso (sem corpo)"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  }
+}
