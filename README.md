@@ -76,6 +76,23 @@ Usuário de demonstração para login: **admin@digitalstore.com** / senha **123@
 
 ---
 
+
+## Execução rápida (back-end e front-end juntos)
+
+Com o MySQL ligado e o `backend/.env` preenchido, rode na raiz do projeto:
+
+```bash
+./iniciar.sh
+```
+
+ou
+
+```bash
+npm run start:all
+```
+
+Isso liga a API em http://localhost:3001 e o site em http://localhost:5173 no mesmo terminal. Para parar os dois, aperte Ctrl+C.
+
 ## Back-end
 
 API REST na pasta `backend/`, com Express, Sequelize, MySQL e JWT, seguindo o repositório oficial [digitalcollegebr/projeto-backend](https://github.com/digitalcollegebr/projeto-backend).
