@@ -5,17 +5,17 @@ import Layout from './Layout';
 function NotFoundPage() {
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-24 text-center md:px-10 xl:px-[100px]">
-        <p className="text-6xl font-extrabold text-primary">404</p>
-        <h1 className="mt-4 text-2xl font-bold text-dark-gray">
-          Página em construção
+      <div className="mx-auto max-w-[1440px] px-4 py-16 text-center md:px-10 md:py-24 xl:px-[100px]">
+        <p className="text-5xl font-extrabold text-primary md:text-6xl">404</p>
+        <h1 className="mt-3 text-xl font-bold text-dark-gray md:mt-4 md:text-2xl">
+          Página não encontrada
         </h1>
-        <p className="mt-2 text-base text-dark-gray-3">
-          Esta página ainda não faz parte da loja.
+        <p className="mt-2 text-sm text-dark-gray-3 md:text-base">
+          Esse endereço não existe na loja.
         </p>
         <Link
           to="/"
-          className="mt-8 inline-flex h-10 items-center rounded bg-primary px-6 text-sm font-bold text-white hover:bg-tertiary"
+          className="mt-6 inline-flex h-10 items-center rounded bg-primary px-6 text-sm font-bold text-white hover:bg-tertiary"
         >
           Voltar para a Home
         </Link>

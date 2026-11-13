@@ -9,7 +9,11 @@ import CadastroPage from './pages/CadastroPage';
 import CartPage from './pages/CartPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
+import ComingSoonPage from './pages/ComingSoonPage';
 import NotFoundPage from './pages/NotFoundPage';
+
+// Páginas do rodapé que ainda não existem na loja
+const paginasEmBreve = ['/about', '/seguranca', '/wishlist', '/blog', '/trabalhe-conosco'];
 
 // Sobe a página para o topo ao trocar de rota
 function ScrollToTop() {
@@ -47,6 +51,10 @@ function App() {
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/entrar" element={<Navigate to="/login" replace />} />
+
+        {paginasEmBreve.map((path) => (
+          <Route key={path} path={path} element={<ComingSoonPage />} />
+        ))}
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
