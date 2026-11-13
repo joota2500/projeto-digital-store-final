@@ -35,7 +35,7 @@ function Footer() {
           <div className="max-w-[310px]">
             <Logo variant="footer" />
 
-            <p className="mt-8 text-base leading-7">
+            <p className="mt-8 text-base leading-7 text-justify">
               A Digital Store é a sua loja de tênis e moda online, com as melhores marcas e preços que cabem no bolso. Compre com segurança e receba no conforto da sua casa.
             </p>
 
