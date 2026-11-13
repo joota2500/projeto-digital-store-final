@@ -23,15 +23,18 @@ function CheckoutEntregaPage() {
     return null;
   }
 
-  const botao = (
-    <button
-      type="submit"
-      form="form-entrega"
-      className="flex h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold text-white transition hover:bg-tertiary"
-    >
-      Continuar
-    </button>
-  );
+  // Cada lugar (resumo no notebook e barra no celular) precisa do próprio botão.
+  function botaoContinuar() {
+    return (
+      <button
+        type="submit"
+        form="form-entrega"
+        className="flex h-12 w-full items-center justify-center rounded-lg bg-primary text-sm font-bold text-white transition hover:bg-tertiary"
+      >
+        Continuar
+      </button>
+    );
+  }
 
   return (
     <CheckoutShell
@@ -40,7 +43,7 @@ function CheckoutEntregaPage() {
       titulo="Entrega"
       descricao="Para onde a gente envia o seu pedido?"
       resumo={
-        <CheckoutResumo mostrarItens botao={botao} />
+        <CheckoutResumo mostrarItens botao={botaoContinuar()} />
       }
     >
       <form
@@ -176,7 +179,7 @@ function CheckoutEntregaPage() {
         </div>
       </form>
 
-      <CheckoutBarra>{botao}</CheckoutBarra>
+      <CheckoutBarra>{botaoContinuar()}</CheckoutBarra>
     </CheckoutShell>
   );
 }

@@ -62,17 +62,23 @@ function CheckoutPagamentoPage() {
     return null;
   }
 
-  const botao = (
-    <button
-      type="button"
-      disabled={enviando}
-      onClick={finalizar}
-      className="flex h-12 w-full items-center justify-center rounded-lg bg-warning text-sm font-bold uppercase tracking-wide text-white transition hover:brightness-95 disabled:opacity-70"
-    >
-      {enviando ? 'Finalizando...' : 'Finalizar compra'}
-    </button>
-  );
+  // Cada lugar (resumo no notebook e barra no celular) precisa do próprio botão.
+  // Se a gente reaproveita o mesmo elemento, o React mostra só em um deles.
+  function botaoFinalizar() {
+    return (
+      <button
+        type="button"
+        disabled={enviando}
+        onClick={finalizar}
+        className="flex h-12 w-full items-center justify-center rounded-lg bg-warning text-sm font-bold uppercase tracking-wide text-white transition hover:brightness-95 disabled:opacity-70"
+      >
+        {enviando ? 'Finalizando...' : 'Finalizar compra'}
+      </button>
+    );
+  }
 
+  // No notebook o botão fica só no card de resumo (à direita).
+  // No celular, só na barra fixa de baixo (CheckoutBarra).
   const observacao = `Pagamento ${pagamentoLabels[checkout.payment_method]?.toLowerCase() || ''} é só uma simulação, para o projeto do curso.`;
 
   return (
@@ -84,7 +90,7 @@ function CheckoutPagamentoPage() {
       resumo={
         <CheckoutResumo
           mostrarEndereco
-          botao={botao}
+          botao={botaoFinalizar()}
           observacao={observacao}
         />
       }
@@ -135,13 +141,6 @@ function CheckoutPagamentoPage() {
             {erro}
           </p>
         )}
-
-        <div className="mt-5 hidden lg:block">
-          {botao}
-          <p className="mt-3 text-center text-[11px] text-dark-gray-3">{observacao}</p>
-        </div>
-
-        <p className="mt-4 text-center text-[11px] text-dark-gray-3 lg:hidden">{observacao}</p>
       </div>
 
       {/* No celular o resumo com endereço aparece abaixo, antes da barra */}
@@ -149,7 +148,7 @@ function CheckoutPagamentoPage() {
         <CheckoutResumo mostrarItens mostrarEndereco />
       </div>
 
-      <CheckoutBarra desabilitado={enviando}>{botao}</CheckoutBarra>
+      <CheckoutBarra desabilitado={enviando}>{botaoFinalizar()}</CheckoutBarra>
     </CheckoutShell>
   );
 }
