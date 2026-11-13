@@ -13,7 +13,7 @@ import {
 import { criarPedido, getUsuarioLogado } from '../services/api';
 
 const campo =
-  'h-[52px] w-full rounded-lg bg-light-gray-3 px-4 text-base text-dark-gray-2 outline-none placeholder:text-light-gray';
+  'h-10 w-full rounded-lg bg-light-gray-3 px-3 text-sm text-dark-gray-2 outline-none placeholder:text-light-gray md:h-11 md:px-4';
 
 const formas = [
   { id: 'pix', label: 'Pix', detalhe: 'Aprovação na hora', Icon: QrCode },
@@ -96,14 +96,14 @@ function CartPage() {
   if (!itens.length) {
     return (
       <Layout>
-        <div className="mx-auto max-w-[1440px] px-4 py-24 text-center md:px-10 xl:px-[100px]">
-          <h1 className="text-2xl font-bold text-dark-gray">Seu carrinho está vazio</h1>
-          <p className="mt-2 text-base text-dark-gray-3">
+        <div className="mx-auto max-w-[1440px] px-4 py-16 text-center md:px-10 md:py-20 xl:px-[100px]">
+          <h1 className="text-xl font-bold text-dark-gray md:text-2xl">Seu carrinho está vazio</h1>
+          <p className="mt-2 text-sm text-dark-gray-3 md:text-base">
             Que tal dar uma olhada nos tênis da loja?
           </p>
           <Link
             to="/products"
-            className="mt-8 inline-flex h-10 items-center rounded bg-primary px-6 text-sm font-bold text-white hover:bg-tertiary"
+            className="mt-6 inline-flex h-10 items-center rounded bg-primary px-6 text-sm font-bold text-white hover:bg-tertiary"
           >
             Ver produtos
           </Link>
@@ -114,49 +114,49 @@ function CartPage() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-10 md:py-10 xl:px-[100px]">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-10 md:py-8 xl:px-[100px]">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2 md:mb-5">
           <div>
-            <h1 className="text-2xl font-bold text-dark-gray">Meu carrinho</h1>
-            <p className="mt-1 text-sm text-dark-gray-3">
+            <h1 className="text-xl font-bold text-dark-gray md:text-2xl">Meu carrinho</h1>
+            <p className="mt-0.5 text-xs text-dark-gray-3 md:text-sm">
               {quantidadeTotal} {quantidadeTotal === 1 ? 'item' : 'itens'}
             </p>
           </div>
-          <Link to="/products" className="text-sm font-bold text-primary hover:underline">
+          <Link to="/products" className="text-xs font-bold text-primary hover:underline md:text-sm">
             Continuar comprando
           </Link>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px]">
-          <section aria-label="Itens do carrinho" className="flex flex-col gap-4">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-6">
+          <section aria-label="Itens do carrinho" className="flex flex-col gap-3">
             {itens.map((item) => (
               <article
                 key={item.key}
-                className="flex gap-4 rounded-lg bg-white p-4 md:p-5"
+                className="flex gap-3 rounded-lg bg-white p-3 md:gap-4 md:p-4"
               >
                 <Link to={`/product/${item.productId}`} className="shrink-0">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="size-24 rounded object-cover md:size-28"
+                    className="size-16 rounded object-cover md:size-20"
                   />
                 </Link>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start justify-between gap-2">
                     <div>
                       <Link
                         to={`/product/${item.productId}`}
-                        className="text-base font-bold text-dark-gray hover:text-primary"
+                        className="text-sm font-bold text-dark-gray hover:text-primary md:text-base"
                       >
                         {item.name}
                       </Link>
-                      <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-dark-gray-3">
-                        {item.size && <span>Tamanho {item.size}</span>}
+                      <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-dark-gray-3">
+                        {item.size && <span>Tam. {item.size}</span>}
                         {item.color && (
                           <span className="inline-flex items-center gap-1">
                             Cor
                             <span
-                              className="inline-block size-3 rounded-full border border-light-gray-2"
+                              className="inline-block size-2.5 rounded-full border border-light-gray-2"
                               style={{ backgroundColor: item.color }}
                               aria-hidden
                             />
@@ -170,34 +170,34 @@ function CartPage() {
                       aria-label={`Remover ${item.name}`}
                       className="text-light-gray hover:text-error"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
 
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2 md:mt-3">
+                    <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         aria-label="Diminuir quantidade"
                         disabled={item.quantity <= 1}
                         onClick={() => alterarQuantidade(item.key, item.quantity - 1)}
-                        className="flex size-8 items-center justify-center rounded border border-light-gray-2 text-dark-gray-2 disabled:opacity-40"
+                        className="flex size-7 items-center justify-center rounded border border-light-gray-2 text-dark-gray-2 disabled:opacity-40"
                       >
-                        <Minus size={14} />
+                        <Minus size={12} />
                       </button>
-                      <span className="min-w-6 text-center text-sm font-bold text-dark-gray">
+                      <span className="min-w-5 text-center text-sm font-bold text-dark-gray">
                         {item.quantity}
                       </span>
                       <button
                         type="button"
                         aria-label="Aumentar quantidade"
                         onClick={() => alterarQuantidade(item.key, item.quantity + 1)}
-                        className="flex size-8 items-center justify-center rounded border border-light-gray-2 text-dark-gray-2"
+                        className="flex size-7 items-center justify-center rounded border border-light-gray-2 text-dark-gray-2"
                       >
-                        <Plus size={14} />
+                        <Plus size={12} />
                       </button>
                     </div>
-                    <p className="text-base font-bold text-dark-gray">
+                    <p className="text-sm font-bold text-dark-gray md:text-base">
                       {formatPrice(item.unitPrice * item.quantity)}
                     </p>
                   </div>
@@ -206,18 +206,18 @@ function CartPage() {
             ))}
           </section>
 
-          <aside className="h-fit rounded-lg bg-white p-5 md:p-6 lg:sticky lg:top-6">
-            <h2 className="text-lg font-bold text-dark-gray">Resumo</h2>
+          <aside className="h-fit rounded-lg bg-white p-4 lg:sticky lg:top-4">
+            <h2 className="text-base font-bold text-dark-gray">Resumo</h2>
 
-            <div className="mt-4">
+            <div className="mt-3">
               {faltaFrete > 0 ? (
-                <p className="text-sm text-dark-gray-3">
+                <p className="text-xs text-dark-gray-3 md:text-sm">
                   Faltam <strong className="text-primary">{formatPrice(faltaFrete)}</strong> para frete grátis
                 </p>
               ) : (
-                <p className="text-sm font-bold text-success">Você ganhou frete grátis!</p>
+                <p className="text-xs font-bold text-success md:text-sm">Você ganhou frete grátis!</p>
               )}
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-light-gray-3">
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-light-gray-3">
                 <div
                   className="h-full rounded-full bg-primary transition-all"
                   style={{ width: `${progressoFrete}%` }}
@@ -225,7 +225,7 @@ function CartPage() {
               </div>
             </div>
 
-            <dl className="mt-5 space-y-2 text-sm">
+            <dl className="mt-4 space-y-1.5 text-sm">
               <div className="flex justify-between text-dark-gray-2">
                 <dt>Subtotal</dt>
                 <dd>{formatPrice(subtotal)}</dd>
@@ -234,30 +234,30 @@ function CartPage() {
                 <dt>Frete</dt>
                 <dd>{frete === 0 ? 'Grátis' : formatPrice(frete)}</dd>
               </div>
-              <div className="flex justify-between border-t border-light-gray-2 pt-3 text-base font-bold text-dark-gray">
+              <div className="flex justify-between border-t border-light-gray-2 pt-2 text-sm font-bold text-dark-gray md:text-base">
                 <dt>Total</dt>
                 <dd>{formatPrice(total)}</dd>
               </div>
             </dl>
 
             {!usuario ? (
-              <div className="mt-6">
-                <p className="mb-3 text-sm text-dark-gray-3">
+              <div className="mt-4">
+                <p className="mb-2 text-xs text-dark-gray-3 md:text-sm">
                   Entre na sua conta para finalizar a compra.
                 </p>
                 <Link
                   to={`/login?redirect=${encodeURIComponent('/carrinho')}`}
-                  className="flex h-12 items-center justify-center rounded bg-primary text-sm font-bold text-white hover:bg-tertiary"
+                  className="flex h-11 items-center justify-center rounded bg-primary text-sm font-bold text-white hover:bg-tertiary"
                 >
                   Entrar para finalizar
                 </Link>
               </div>
             ) : (
-              <form onSubmit={finalizar} className="mt-6 flex flex-col gap-4">
-                <h3 className="text-base font-bold text-dark-gray">Entrega</h3>
+              <form onSubmit={finalizar} className="mt-4 flex flex-col gap-3">
+                <h3 className="text-sm font-bold text-dark-gray">Entrega</h3>
 
                 <div>
-                  <label htmlFor="recipient" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                  <label htmlFor="recipient" className="mb-1 block text-xs font-bold text-dark-gray-2">
                     Quem vai receber
                   </label>
                   <input
@@ -271,7 +271,7 @@ function CartPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="zipcode" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                  <label htmlFor="zipcode" className="mb-1 block text-xs font-bold text-dark-gray-2">
                     CEP
                   </label>
                   <input
@@ -286,7 +286,7 @@ function CartPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="street" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                  <label htmlFor="street" className="mb-1 block text-xs font-bold text-dark-gray-2">
                     Rua
                   </label>
                   <input
@@ -299,9 +299,9 @@ function CartPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-[1fr_1.4fr] gap-3">
+                <div className="grid grid-cols-[1fr_1.4fr] gap-2">
                   <div>
-                    <label htmlFor="number" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                    <label htmlFor="number" className="mb-1 block text-xs font-bold text-dark-gray-2">
                       Número
                     </label>
                     <input
@@ -314,7 +314,7 @@ function CartPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="complement" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                    <label htmlFor="complement" className="mb-1 block text-xs font-bold text-dark-gray-2">
                       Complemento
                     </label>
                     <input
@@ -328,7 +328,7 @@ function CartPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="neighborhood" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                  <label htmlFor="neighborhood" className="mb-1 block text-xs font-bold text-dark-gray-2">
                     Bairro
                   </label>
                   <input
@@ -341,9 +341,9 @@ function CartPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-[1fr_90px] gap-3">
+                <div className="grid grid-cols-[1fr_72px] gap-2">
                   <div>
-                    <label htmlFor="city" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                    <label htmlFor="city" className="mb-1 block text-xs font-bold text-dark-gray-2">
                       Cidade
                     </label>
                     <input
@@ -356,7 +356,7 @@ function CartPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="state" className="mb-1 block text-sm font-bold text-dark-gray-2">
+                    <label htmlFor="state" className="mb-1 block text-xs font-bold text-dark-gray-2">
                       UF
                     </label>
                     <select
@@ -375,8 +375,8 @@ function CartPage() {
                   </div>
                 </div>
 
-                <h3 className="mt-2 text-base font-bold text-dark-gray">Pagamento</h3>
-                <div role="radiogroup" aria-label="Forma de pagamento" className="flex flex-col gap-2">
+                <h3 className="mt-1 text-sm font-bold text-dark-gray">Pagamento</h3>
+                <div role="radiogroup" aria-label="Forma de pagamento" className="flex flex-col gap-1.5">
                   {formas.map(({ id, label, detalhe, Icon }) => {
                     const ativo = form.payment_method === id;
                     return (
@@ -386,13 +386,13 @@ function CartPage() {
                         role="radio"
                         aria-checked={ativo}
                         onClick={() => atualizar('payment_method', id)}
-                        className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
+                        className={`flex items-center gap-2.5 rounded-lg border p-2.5 text-left transition ${
                           ativo
                             ? 'border-primary bg-[#C92071]/5'
                             : 'border-light-gray-2 hover:border-primary/40'
                         }`}
                       >
-                        <Icon size={22} className={ativo ? 'text-primary' : 'text-dark-gray-3'} />
+                        <Icon size={18} className={ativo ? 'text-primary' : 'text-dark-gray-3'} />
                         <span>
                           <span className="block text-sm font-bold text-dark-gray">{label}</span>
                           <span className="block text-xs text-dark-gray-3">{detalhe}</span>
@@ -411,11 +411,11 @@ function CartPage() {
                 <button
                   type="submit"
                   disabled={enviando}
-                  className="mt-1 h-12 rounded bg-warning text-sm font-bold text-white uppercase transition hover:brightness-95 disabled:opacity-70"
+                  className="mt-1 h-11 rounded bg-warning text-sm font-bold text-white uppercase transition hover:brightness-95 disabled:opacity-70"
                 >
                   {enviando ? 'Finalizando...' : 'Finalizar compra'}
                 </button>
-                <p className="text-center text-xs text-dark-gray-3">
+                <p className="text-center text-[11px] text-dark-gray-3">
                   Pagamento {pagamentoLabels[form.payment_method]?.toLowerCase()} é só uma simulação,
                   para o projeto do curso.
                 </p>
