@@ -14,6 +14,7 @@ import {
   cancelarPedido,
   getUsuarioLogado,
 } from '../services/api';
+import { confirmar, toastSucesso, alertaErro } from '../utils/alertas';
 
 const etapas = ['pendente', 'pago', 'enviado', 'entregue'];
 
@@ -66,7 +67,13 @@ function OrderDetailPage() {
 
   async function confirmarCancelamento() {
     if (!pedido) return;
-    const ok = window.confirm('Tem certeza que deseja cancelar este pedido?');
+
+    const ok = await confirmar({
+      titulo: 'Cancelar este pedido?',
+      texto: 'Essa ação não pode ser desfeita. O estoque dos produtos volta para a loja.',
+      botaoConfirmar: 'Sim, cancelar',
+      botaoVoltar: 'Voltar',
+    });
     if (!ok) return;
 
     setCancelando(true);
@@ -74,8 +81,11 @@ function OrderDetailPage() {
     try {
       const atualizado = await cancelarPedido(pedido.id);
       setPedido(atualizado);
+      toastSucesso('Pedido cancelado com sucesso.');
     } catch (err) {
-      setAvisoCancelar(err.message || 'Não foi possível cancelar o pedido.');
+      const mensagem = err.message || 'Não foi possível cancelar o pedido.';
+      setAvisoCancelar(mensagem);
+      await alertaErro('Não foi possível cancelar', mensagem);
     } finally {
       setCancelando(false);
     }
