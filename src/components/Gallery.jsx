@@ -1,21 +1,28 @@
 import { useState } from 'react';
 
-// Importando as setas (importar pelo JS funciona no build da Vercel)
 import arrowLeft from '../assets/arrow-left.svg';
 import arrowRight from '../assets/arrow-right.svg';
 
-// Componente de Galeria de imagens (carrossel simples)
-// Props: images (array de src ou de { src }), className, width, height, radius, showThumbs,
-// showArrows (padrão true), showDots (padrão false)
+// Converte o valor da prop para CSS (aceita número, "700" ou "700px")
+function toCssSize(value) {
+  if (typeof value === 'number') return `${value}px`;
+  const texto = String(value);
+  if (texto.endsWith('px') || texto.endsWith('%')) return texto;
+  return `${texto}px`;
+}
+
+// Galeria / carrossel
+// Props: images (string ou { src }), width, height, radius, showThumbs, showDots, showArrows
 export default function Gallery({
   images = [],
   className = '',
   width = '100%',
-  height = '400px',
-  radius = '8px',
+  height = 681,
+  radius = '0px',
   showThumbs = false,
   showArrows = true,
   showDots = false,
+  slideClassName = '',
 }) {
   const [current, setCurrent] = useState(0);
 
@@ -26,87 +33,109 @@ export default function Gallery({
   // Aceita tanto '/foto.jpg' quanto { src: '/foto.jpg' }
   const getSrc = (image) => (typeof image === 'string' ? image : image.src);
 
-  const next = () => {
-    setCurrent((prev) => (prev + 1) % images.length);
-  };
+  const isFirst = current === 0;
+  const isLast = current === images.length - 1;
 
-  const prev = () => {
-    setCurrent((prev) => (prev - 1 + images.length) % images.length);
-  };
+  // Proporção do slide (na Home fica 1440 / 681)
+  const widthNumber = parseFloat(String(width));
+  const heightNumber = parseFloat(String(height));
+  const aspectRatio =
+    !Number.isNaN(widthNumber) && String(width) !== '100%'
+      ? `${widthNumber} / ${heightNumber}`
+      : `1440 / ${heightNumber}`;
 
-  const goTo = (index) => {
-    setCurrent(index);
-  };
+  const arrowClass =
+    'absolute top-1/2 z-10 flex size-12 -translate-y-1/2 items-center justify-center rounded-full transition hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent';
 
   return (
-    <div className={`relative ${className}`} style={{ width }}>
+    <div
+      className={className}
+      style={{
+        width: String(width) === '100%' ? '100%' : toCssSize(width),
+        maxWidth: '100%',
+      }}
+    >
       {/* Slide principal */}
       <div
-        className="relative overflow-hidden"
-        style={{ height, borderRadius: radius }}
+        className={`relative w-full overflow-hidden ${slideClassName}`}
+        style={{ aspectRatio, borderRadius: radius }}
       >
-        <img
-          src={getSrc(images[current])}
-          alt={`Slide ${current + 1}`}
-          className="w-full h-full object-cover"
-        />
+        <div
+          className="flex h-full transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {images.map((image, index) => (
+            <img
+              key={getSrc(image)}
+              src={getSrc(image)}
+              alt={`Imagem ${index + 1} de ${images.length}`}
+              aria-hidden={index !== current}
+              className="h-full w-full shrink-0 object-cover"
+            />
+          ))}
+        </div>
 
-        {/* Setas de navegação */}
-        {showArrows && images.length > 1 && (
+        {/* Setas: param no primeiro e no último slide (não voltam ao início) */}
+        {showArrows && (
           <>
             <button
               type="button"
-              onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
-              aria-label="Anterior"
+              className={`${arrowClass} left-2 md:left-6`}
+              onClick={() => setCurrent((prev) => prev - 1)}
+              disabled={isFirst}
+              aria-label="Imagem anterior"
             >
-              <img src={arrowLeft} alt="Anterior" className="w-6 h-6" />
+              <img src={arrowLeft} alt="" />
             </button>
             <button
               type="button"
-              onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
-              aria-label="Próximo"
+              className={`${arrowClass} right-2 md:right-6`}
+              onClick={() => setCurrent((prev) => prev + 1)}
+              disabled={isLast}
+              aria-label="Próxima imagem"
             >
-              <img src={arrowRight} alt="Próximo" className="w-6 h-6" />
+              <img src={arrowRight} alt="" />
             </button>
           </>
         )}
 
-        {/* Bolinhas (dots) centralizadas na parte de baixo */}
+        {/* Bolinhas na parte de baixo */}
         {showDots && images.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {images.map((_, index) => (
+          <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+            {images.map((image, index) => (
               <button
                 type="button"
-                key={index}
-                onClick={() => goTo(index)}
-                className={`w-[10px] h-[10px] rounded-full transition-colors ${
+                key={getSrc(image)}
+                aria-label={`Ir para imagem ${index + 1}`}
+                onClick={() => setCurrent(index)}
+                className={`size-3 rounded-full transition-colors ${
                   index === current ? 'bg-primary' : 'bg-light-gray-2'
                 }`}
-                aria-label={`Ir para slide ${index + 1}`}
               />
             ))}
           </div>
         )}
       </div>
 
-      {/* Miniaturas (thumbs) */}
+      {/* Miniaturas (página do produto) */}
       {showThumbs && images.length > 1 && (
-        <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:gap-5">
           {images.map((image, index) => (
             <button
               type="button"
-              key={index}
-              onClick={() => goTo(index)}
-              className={`flex-shrink-0 border-2 rounded overflow-hidden ${
+              key={getSrc(image)}
+              onClick={() => setCurrent(index)}
+              aria-label={`Ver imagem ${index + 1}`}
+              aria-current={index === current}
+              className={`shrink-0 overflow-hidden border-2 ${
                 index === current ? 'border-primary' : 'border-transparent'
               }`}
+              style={{ borderRadius: radius }}
             >
               <img
                 src={getSrc(image)}
-                alt={`Miniatura ${index + 1}`}
-                className="w-[117px] h-[95px] object-cover"
+                alt=""
+                className="h-[60px] w-[74px] object-cover md:h-[95px] md:w-[117px]"
               />
             </button>
           ))}

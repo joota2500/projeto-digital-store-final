@@ -32,9 +32,10 @@ Abra http://localhost:5173
 - `/` - Home
 - `/products` ou `/produtos` - Listagem de produtos (aceita `?filter=`)
 - `/product/:id` - Visualização do produto
+- `/login`, `/cadastro`, `/categorias` e `/meus-pedidos` - Página em construção (sem back-end neste projeto)
 
 ## Observações
 
-- Dados mockados em `src/data/products.js`
-- Filtros e ordenação são visuais (conforme permitido na documentação)
+- Dados mockados em `src/data/products.js` (sem banco de dados)
+- A busca, os filtros e a ordenação da listagem funcionam no front-end
 - Imagens oficiais do projeto em `public/` e ícones em `src/assets/`

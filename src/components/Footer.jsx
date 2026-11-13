@@ -1,13 +1,11 @@
 import Logo from './Logo'
 import FooterInfo from './FooterInfo'
 
-// Importando os ícones das redes sociais
 import facebook from '../assets/facebook.svg'
 import instagram from '../assets/instagram.svg'
 import twitter from '../assets/twitter.svg'
 
 function Footer() {
-  // Informações da primeira coluna
   const informacoes = [
     { text: 'Sobre Drip Store', link: '/about' },
     { text: 'Segurança', link: '/seguranca' },
@@ -17,116 +15,70 @@ function Footer() {
     { text: 'Meus Pedidos', link: '/meus-pedidos' },
   ]
 
-  // Informações da segunda coluna
+  // Os links levam para a listagem com o termo de busca
   const categorias = [
-    { text: 'Camisetas', link: '/categorias/camisetas' },
-    { text: 'Calças', link: '/categorias/calcas' },
-    { text: 'Bonés', link: '/categorias/bones' },
-    { text: 'Headphones', link: '/categorias/headphones' },
-    { text: 'Tênis', link: '/categorias/tenis' },
+    { text: 'Camisetas', link: '/products?filter=camisetas' },
+    { text: 'Calças', link: '/products?filter=calças' },
+    { text: 'Bonés', link: '/products?filter=bonés' },
+    { text: 'Headphones', link: '/products?filter=headphones' },
+    { text: 'Tênis', link: '/products' },
   ]
 
-  // Informações da terceira coluna
-  const contato = [
-    {
-      text: 'Av. Santos Dumont, 1510 - 1 andar - Aldeota, Fortaleza - CE, 60150-161',
-      link: '#',
-    },
-    {
-      text: '(85) 3051-3411',
-      link: 'tel:8530513411',
-    },
-  ]
-
-  // Pega o ano atual automaticamente
   const anoAtual = new Date().getFullYear()
 
   return (
-    <footer className="bg-dark-gray text-white w-full">
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
+    <footer className="bg-dark-gray text-white">
+      <div className="mx-auto max-w-[1440px] px-4 pt-14 pb-8 md:px-10 md:pt-[72px] xl:px-[100px]">
 
-        {/* Parte superior do footer */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,_1fr)_auto_auto_auto] lg:gap-16">
 
-          {/* Logo, descrição e redes sociais */}
-          <div className="flex flex-col gap-6">
+          <div className="max-w-[310px]">
             <Logo variant="footer" />
 
-            {/* Descrição da empresa */}
-            <p className="text-sm leading-relaxed text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+            <p className="mt-8 text-base leading-7">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
             </p>
 
-            {/* Redes sociais */}
-            <div className="flex items-center gap-5">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={facebook}
-                  alt="Facebook"
-                  className="w-6 h-6"
-                />
-              </a>
-
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={instagram}
-                  alt="Instagram"
-                  className="w-6 h-6"
-                />
-              </a>
-
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={twitter}
-                  alt="Twitter"
-                  className="w-6 h-6"
-                />
-              </a>
-            </div>
+            <ul className="mt-8 flex items-center gap-6">
+              <li>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
+                  <img src={facebook} alt="" className="h-5 w-auto" />
+                </a>
+              </li>
+              <li>
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+                  <img src={instagram} alt="" className="h-5 w-auto" />
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
+                  <img src={twitter} alt="" className="h-5 w-auto" />
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Coluna de informações */}
-          <FooterInfo
-            title="Informações"
-            informations={informacoes}
-          />
+          <FooterInfo title="Informação" informations={informacoes} />
+          <FooterInfo title="Categorias" informations={categorias} />
 
-          {/* Coluna de categorias */}
-          <FooterInfo
-            title="Categorias"
-            informations={categorias}
-          />
-
-          {/* Coluna de contato */}
-          <FooterInfo
-            title="Contato"
-            informations={contato}
-          />
-
+          <div>
+            <h3 className="mb-5 text-lg font-semibold">Contato</h3>
+            <address className="text-base leading-7 not-italic">
+              Av. Santos Dumont, 1510 - 1 andar -
+              <br />
+              Aldeota, Fortaleza - CE, 60150-161
+              <br />
+              <br />
+              (85) 3051-3411
+            </address>
+          </div>
         </div>
 
-        {/* Linha divisória */}
-        <hr className="border-dark-gray-3 my-10" />
+        <hr className="mt-12 border-dark-gray-3" />
 
-        {/* Direitos autorais */}
-        <p className="text-center text-sm text-white">
+        <p className="mt-8 text-center text-sm">
           © {anoAtual} Digital Store
         </p>
-
       </div>
     </footer>
   )

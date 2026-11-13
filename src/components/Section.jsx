@@ -1,17 +1,36 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
-// Componente de seção reutilizável com título e link opcional
+// Seção reutilizável com título e link opcional ("Ver todos")
 const Section = ({ title, titleAlign = 'left', link, children, className = '' }) => {
+  const isExternal = link?.href?.startsWith('http');
+
+  const linkClassName =
+    'flex items-center gap-2 text-sm text-primary hover:underline md:text-lg';
+
   return (
-    <section className={`py-8 ${className}`}>
-      <div className={`flex items-center mb-6 ${titleAlign === 'center' ? 'justify-center' : 'justify-between'}`}>
-        <h2 className={`text-2xl font-bold text-dark-gray-2 ${titleAlign === 'center' ? 'text-center w-full' : ''}`}>
+    <section className={className}>
+      <div
+        className={`mb-5 flex items-center gap-4 ${
+          titleAlign === 'center' ? 'justify-center' : 'justify-between'
+        }`}
+      >
+        <h2 className="text-lg font-bold text-dark-gray-2 md:text-2xl">
           {title}
         </h2>
+
         {link && (
-          <a href={link.href} className="text-primary text-lg font-medium hover:underline">
-            {link.text}
-          </a>
+          isExternal ? (
+            <a href={link.href} className={linkClassName}>
+              {link.text}
+              <ArrowRight size={18} />
+            </a>
+          ) : (
+            <Link to={link.href} className={linkClassName}>
+              {link.text}
+              <ArrowRight size={18} />
+            </Link>
+          )
         )}
       </div>
       {children}

@@ -1,30 +1,47 @@
-function FilterGroup({ title, inputType, options }) {
+// Grupo de filtros (checkbox ou rádio) da página de listagem
+function FilterGroup({
+  title,
+  inputType,
+  options,
+  selected = [],
+  onChange,
+  name,
+}) {
+  const groupName = name || title.toLowerCase().replace(/\s+/g, '-');
+
   return (
-    <div className="flex flex-col gap-3">
-      {/* Título do grupo */}
-      <h3 className="text-[14px] font-medium text-dark-gray-2">
+    <fieldset className="mb-5">
+      <legend className="mb-3 text-sm font-bold text-dark-gray-2">
         {title}
-      </h3>
+      </legend>
 
-      {/* Lista de opções */}
-      <div className="flex flex-col gap-2">
-        {options.map((option, index) => (
-          <label
-            key={index}
-            className="flex items-center gap-2 text-sm text-dark-gray-2 cursor-pointer"
-          >
-            <input
-              type={inputType}
-              name={inputType === "radio" ? title : undefined}
-              value={option.value || option.text}
-              className="w-[22px] h-[22px] accent-primary cursor-pointer"
-            />
+      <div className="flex flex-col gap-2.5">
+        {options.map((option) => {
+          const value = option.value ?? option.text;
+          const inputId = `${groupName}-${value}`;
+          const isChecked = selected.includes(value);
 
-            {option.text}
-          </label>
-        ))}
+          return (
+            <label
+              key={inputId}
+              htmlFor={inputId}
+              className="flex cursor-pointer items-center gap-3 text-sm text-dark-gray-2"
+            >
+              <input
+                id={inputId}
+                type={inputType}
+                name={groupName}
+                value={value}
+                checked={isChecked}
+                onChange={(event) => onChange?.(value, event.target.checked)}
+                className="filter-input"
+              />
+              {option.text}
+            </label>
+          );
+        })}
       </div>
-    </div>
+    </fieldset>
   );
 }
 

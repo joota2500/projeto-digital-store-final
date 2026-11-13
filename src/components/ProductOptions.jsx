@@ -1,34 +1,43 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-function ProductOptions({ options, radius, shape, type }) {
-  // Guarda a opção selecionada
+// Opções de tamanho (quadrado) ou cor (círculo)
+function ProductOptions({ options, radius = '4px', shape, type, label }) {
   const [selected, setSelected] = useState(null);
 
   return (
-    <div className="flex flex-wrap gap-3">
-      {options.map((option, index) => {
-        const isSelected = selected === index;
+    <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
+      {options.map((option) => {
+        const isSelected = selected === option;
+        const isCircle = shape === 'circle';
+        const isColor = type === 'color';
 
         return (
           <button
-            key={index}
+            key={option}
             type="button"
-            onClick={() => setSelected(index)}
-            className={`flex items-center justify-center border cursor-pointer ${
-              isSelected ? "border-primary border-2" : "border-light-gray-2"
+            role="radio"
+            aria-checked={isSelected}
+            aria-label={isColor ? `Cor ${option}` : `Tamanho ${option}`}
+            onClick={() => setSelected(option)}
+            className={`flex items-center justify-center transition-colors ${
+              isCircle ? 'size-[31px] rounded-full' : 'h-[46px] min-w-[46px] px-2'
             } ${
-              shape === "circle"
-                ? "w-[31px] h-[31px] rounded-full"
-                : "h-[46px] px-4"
+              isSelected
+                ? 'border-2 border-primary'
+                : isColor
+                  ? 'border-2 border-transparent'
+                  : 'border border-light-gray-2'
+            } ${!isColor && isSelected ? 'bg-primary text-white' : ''} ${
+              !isColor && !isSelected ? 'text-dark-gray-2' : ''
             }`}
             style={{
-              borderRadius: shape === "circle" ? "50%" : radius,
-              backgroundColor: type === "color" ? option : "white",
+              borderRadius: isCircle ? undefined : radius,
+              backgroundColor: isColor ? option : undefined,
+              boxShadow: isColor && isSelected ? 'inset 0 0 0 3px white' : undefined,
             }}
           >
-            {/* Mostra o texto quando o tipo for text */}
-            {type === "text" && (
-              <span className="text-[24px] text-dark-gray-2">
+            {!isColor && (
+              <span className={isCircle ? 'text-sm' : 'text-2xl max-md:text-base'}>
                 {option}
               </span>
             )}

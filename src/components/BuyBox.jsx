@@ -1,5 +1,7 @@
-import starIcon from "../assets/star-icon.svg";
+import starIcon from '../assets/star-icon.svg';
+import { formatPrice } from '../data/products';
 
+// Caixa com as informações de compra da página do produto
 function BuyBox({
   name,
   reference,
@@ -9,81 +11,73 @@ function BuyBox({
   priceDiscount,
   description,
   children,
+  onBuy,
 }) {
-  // Formata o valor para moeda brasileira
-  const formatPrice = (value) => {
-    return `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
-  };
+  const temDesconto = priceDiscount !== undefined && priceDiscount < price;
+  const nota = Number(stars).toFixed(1).replace('.', ',');
 
   return (
     <div className="flex flex-col gap-5">
+      <div>
+        <h1 className="text-2xl leading-tight font-bold text-dark-gray md:text-[32px]">
+          {name}
+        </h1>
+        <p className="mt-2 text-xs text-dark-gray-3">
+          {reference}
+        </p>
+      </div>
 
-      {/* Nome do produto */}
-      <h1 className="text-[32px] font-bold text-dark-gray">
-        {name}
-      </h1>
-
-      {/* Referência do produto */}
-      <p className="text-[12px] text-dark-gray-3">
-        {reference}
-      </p>
-
-      {/* Avaliação */}
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1 bg-warning rounded-[4px] px-2 py-1">
-          <span className="text-[14px] text-white">
-            {stars}
-          </span>
-
+      {/* Nota e quantidade de avaliações */}
+      <div className="flex items-center gap-3">
+        <span className="flex h-7 items-center gap-1 rounded bg-warning px-2 text-sm font-bold text-white">
+          {nota}
           <img
             src={starIcon}
-            alt="Estrela"
-            className="w-4 h-4"
+            alt=""
+            className="size-3.5 brightness-0 invert"
           />
-        </div>
-
-        <span className="text-[14px] text-light-gray">
+        </span>
+        <span className="text-sm text-light-gray">
           ({rating} avaliações)
         </span>
       </div>
 
-      {/* Preços */}
-      <div className="flex items-center gap-3">
-        {priceDiscount ? (
+      {/* Preço atual primeiro; o antigo fica riscado ao lado */}
+      <p className="flex flex-wrap items-baseline gap-3">
+        {temDesconto ? (
           <>
-            <span className="text-[16px] text-light-gray-2 line-through">
-              {formatPrice(price)}
-            </span>
-
             <span className="text-[32px] font-bold text-dark-gray-2">
               {formatPrice(priceDiscount)}
             </span>
+            <del className="text-base text-light-gray-2">
+              {formatPrice(price)}
+            </del>
           </>
         ) : (
           <span className="text-[32px] font-bold text-dark-gray-2">
             {formatPrice(price)}
           </span>
         )}
-      </div>
-
-      {/* Descrição */}
-      <p className="text-[14px] text-dark-gray-2 leading-relaxed">
-        {description}
       </p>
 
-      {/* Opções de tamanho e cor */}
-      <div className="flex flex-col gap-5">
-        {children}
+      <div>
+        <h2 className="mb-2 text-sm font-bold text-light-gray">
+          Descrição do produto
+        </h2>
+        <p className="text-sm leading-6 text-dark-gray-2">
+          {description}
+        </p>
       </div>
 
-      {/* Botão de compra */}
+      {children}
+
       <button
         type="button"
-        className="w-[220px] max-w-full h-[48px] bg-warning text-white text-[16px] font-bold rounded-[8px] cursor-pointer hover:opacity-90"
+        onClick={onBuy}
+        className="h-12 w-full rounded-lg bg-warning text-base font-bold tracking-wide text-white uppercase transition hover:brightness-95 md:w-[220px]"
       >
-        COMPRAR
+        Comprar
       </button>
-
     </div>
   );
 }

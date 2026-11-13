@@ -1,152 +1,167 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { SlidersHorizontal } from 'lucide-react';
 
-import Layout from "./Layout";
-import Section from "../components/Section";
-import ProductListing from "../components/ProductListing";
-import FilterGroup from "../components/FilterGroup";
+import Layout from './Layout';
+import Section from '../components/Section';
+import ProductListing from '../components/ProductListing';
+import FilterGroup from '../components/FilterGroup';
 
-import { products } from "../data/products";
+import { products, getFinalPrice, filterOptions } from '../data/products';
+
+const filtrosVazios = {
+  brand: [],
+  category: [],
+  gender: [],
+  condition: [],
+};
+
+// Remove acentos para a busca funcionar com "tenis" e "tênis"
+function normalizar(texto) {
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function correspondeABusca(produto, termo) {
+  if (!termo) return true;
+  const alvo = normalizar(`tênis ${produto.name} ${produto.brand} ${produto.category} ${produto.gender}`);
+  return normalizar(termo)
+    .split(/\s+/)
+    .every((palavra) => alvo.includes(palavra));
+}
 
 function ProductListingPage() {
-  // Pega o filtro que vem pela URL
   const [searchParams] = useSearchParams();
-  const filter = searchParams.get("filter") || "";
+  const filter = searchParams.get('filter') ?? '';
+  const categoryParam = searchParams.get('category');
+  const brandParam = searchParams.get('brand');
 
-  // Guarda a opção de ordenação
-  const [order, setOrder] = useState("");
+  // Ordenação começa em "Menor preço"
+  const [order, setOrder] = useState('lowest');
+  const [selected, setSelected] = useState(filtrosVazios);
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
-  // Calcula os produtos filtrados e ordenados
+  // Se a URL trouxer categoria ou marca, já marca o filtro
+  useEffect(() => {
+    setSelected({
+      ...filtrosVazios,
+      category: categoryParam ? [categoryParam] : [],
+      brand: brandParam ? [brandParam] : [],
+    });
+  }, [categoryParam, brandParam]);
+
+  function atualizarFiltro(grupo, valor, marcado, somenteUm = false) {
+    setSelected((atual) => ({
+      ...atual,
+      [grupo]: somenteUm
+        ? [valor]
+        : marcado
+          ? [...atual[grupo], valor]
+          : atual[grupo].filter((item) => item !== valor),
+    }));
+  }
+
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    const resultado = products.filter((produto) => {
+      if (!correspondeABusca(produto, filter)) return false;
+      if (selected.brand.length && !selected.brand.includes(produto.brand)) return false;
+      if (selected.category.length && !selected.category.includes(produto.category)) return false;
+      if (selected.gender.length && !selected.gender.includes(produto.gender)) return false;
+      if (selected.condition.length && !selected.condition.includes(produto.condition)) return false;
+      return true;
+    });
 
-    // Filtra pelo nome ou categoria
-    if (filter) {
-      result = result.filter((product) =>
-        product.name.toLowerCase().includes(filter.toLowerCase()) ||
-        product.category.toLowerCase().includes(filter.toLowerCase())
-      );
-    }
+    if (order === 'relevance') return resultado;
 
-    // Ordena pelo preço, considerando o desconto
-    if (order === "menor") {
-      result.sort((a, b) => {
-        const priceA = a.priceDiscount ?? a.price;
-        const priceB = b.priceDiscount ?? b.price;
+    return [...resultado].sort((a, b) =>
+      order === 'lowest'
+        ? getFinalPrice(a) - getFinalPrice(b)
+        : getFinalPrice(b) - getFinalPrice(a)
+    );
+  }, [filter, selected, order]);
 
-        return priceA - priceB;
-      });
-    }
-
-    if (order === "maior") {
-      result.sort((a, b) => {
-        const priceA = a.priceDiscount ?? a.price;
-        const priceB = b.priceDiscount ?? b.price;
-
-        return priceB - priceA;
-      });
-    }
-
-    return result;
-  }, [filter, order]);
+  const temFiltroAtivo = Object.values(selected).some((lista) => lista.length > 0);
+  const quantidade = filteredProducts.length;
+  const titulo = `${filter ? `Resultados para “${filter}” - ` : ''}${quantidade} ${
+    quantidade === 1 ? 'produto' : 'produtos'
+  }`;
 
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row gap-8 px-4 py-8">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-8 md:px-10 md:py-10 lg:flex-row lg:items-start lg:gap-7 xl:px-[100px]">
 
-        {/* Barra lateral de filtros */}
-        <aside className="w-full md:w-[308px] shrink-0 flex flex-col gap-5">
-
-          {/* Ordenação */}
-          <div className="flex flex-col gap-3">
-            <label className="text-[16px] font-medium text-dark-gray-2">
+        {/* Barra lateral: ordenar + filtrar */}
+        <aside className="flex w-full shrink-0 flex-col gap-6 lg:w-[308px]">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="sort" className="text-base text-dark-gray-2">
               Ordenar por
             </label>
-
             <select
+              id="sort"
               value={order}
               onChange={(e) => setOrder(e.target.value)}
-              className="w-full h-[60px] px-4 border border-light-gray-2 rounded text-dark-gray-2 bg-white outline-none"
+              className="h-[60px] w-full cursor-pointer rounded border border-dark-gray-2 bg-transparent px-4 text-base text-dark-gray-2 outline-none focus:border-primary lg:w-[308px]"
             >
-              <option value="">Mais relevantes</option>
-              <option value="menor">Menor preço</option>
-              <option value="maior">Maior preço</option>
+              <option value="lowest">Menor preço</option>
+              <option value="highest">Maior preço</option>
+              <option value="relevance">Mais relevantes</option>
             </select>
           </div>
 
-          {/* Caixa de filtros */}
-          <div className="w-full bg-white p-5 flex flex-col gap-5 rounded">
+          {/* No celular o painel de filtros começa escondido */}
+          <button
+            type="button"
+            onClick={() => setMostrarFiltros((aberto) => !aberto)}
+            aria-expanded={mostrarFiltros}
+            className="flex h-12 items-center justify-center gap-2 rounded bg-primary text-sm font-bold text-white lg:hidden"
+          >
+            <SlidersHorizontal size={18} />
+            {mostrarFiltros ? 'Esconder filtros' : 'Filtrar'}
+          </button>
 
-            <h2 className="text-[16px] font-medium text-dark-gray-2">
-              Filtrar por
-            </h2>
+          <div
+            className={`rounded bg-white p-[30px] lg:block lg:w-[308px] ${
+              mostrarFiltros ? 'block' : 'hidden'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-dark-gray-2">Filtrar por</h2>
+              {temFiltroAtivo && (
+                <button
+                  type="button"
+                  onClick={() => setSelected(filtrosVazios)}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Limpar
+                </button>
+              )}
+            </div>
 
-            <div className="w-full h-[1px] bg-light-gray-2"></div>
+            <hr className="mt-5 mb-5 border-light-gray-2" />
 
-            {/* Filtro por marca */}
+            {['brand', 'category', 'gender'].map((grupo) => (
+              <FilterGroup
+                key={grupo}
+                title={filterOptions[grupo].title}
+                inputType="checkbox"
+                options={filterOptions[grupo].options}
+                selected={selected[grupo]}
+                onChange={(valor, marcado) => atualizarFiltro(grupo, valor, marcado)}
+              />
+            ))}
+
             <FilterGroup
-              title="Marca"
-              inputType="checkbox"
-              options={[
-                { text: "Adidas" },
-                { text: "Nike" },
-                { text: "Puma" },
-                { text: "K-Swiss" },
-              ]}
-            />
-
-            <div className="w-full h-[1px] bg-light-gray-2"></div>
-
-            {/* Filtro por categoria */}
-            <FilterGroup
-              title="Categoria"
-              inputType="checkbox"
-              options={[
-                { text: "Esporte e lazer" },
-                { text: "Casual" },
-                { text: "Utilitário" },
-                { text: "Corrida" },
-              ]}
-            />
-
-            <div className="w-full h-[1px] bg-light-gray-2"></div>
-
-            {/* Filtro por gênero */}
-            <FilterGroup
-              title="Gênero"
-              inputType="checkbox"
-              options={[
-                { text: "Masculino" },
-                { text: "Feminino" },
-                { text: "Unisex" },
-              ]}
-            />
-
-            <div className="w-full h-[1px] bg-light-gray-2"></div>
-
-            {/* Filtro por estado */}
-            <FilterGroup
-              title="Estado"
+              title={filterOptions.condition.title}
               inputType="radio"
-              options={[
-                { text: "Novo" },
-                { text: "Usado" },
-              ]}
+              options={filterOptions.condition.options}
+              selected={selected.condition}
+              onChange={(valor, marcado) => atualizarFiltro('condition', valor, marcado, true)}
             />
-
           </div>
         </aside>
 
-        {/* Lista de produtos */}
-        <div className="flex-1 min-w-0">
-          <Section
-            title={`Resultados para "${filter || "todos os produtos"}" - ${filteredProducts.length} produtos`}
-            titleAlign="left"
-          >
-            <ProductListing products={filteredProducts} columns={3} />
-          </Section>
-        </div>
-
+        <Section title={titulo} titleAlign="left" className="min-w-0 flex-1">
+          <ProductListing products={filteredProducts} columns={3} />
+        </Section>
       </div>
     </Layout>
   );
