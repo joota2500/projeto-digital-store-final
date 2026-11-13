@@ -28,11 +28,11 @@ function Footer() {
 
   return (
     <footer className="bg-dark-gray text-white">
-      <div className="mx-auto max-w-[1440px] px-4 pt-14 pb-8 md:px-10 md:pt-[72px] xl:px-[100px]">
+      <div className="mx-auto max-w-360 px-4 pt-14 pb-8 md:px-10 md:pt-18 xl:px-25">
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,_1fr)_auto_auto_auto] lg:gap-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:gap-16">
 
-          <div className="max-w-[310px]">
+          <div className="max-w-77.5">
             <Logo variant="footer" />
 
             <p className="mt-8 text-base leading-7 text-justify">
