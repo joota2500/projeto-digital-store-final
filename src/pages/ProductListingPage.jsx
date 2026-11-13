@@ -7,7 +7,8 @@ import Section from '../components/Section';
 import ProductListing from '../components/ProductListing';
 import FilterGroup from '../components/FilterGroup';
 
-import { products, getFinalPrice, filterOptions } from '../data/products';
+import { getProducts } from '../services/api';
+import { getFinalPrice, filterOptions } from '../data/products';
 
 const filtrosVazios = {
   brand: [],
@@ -35,10 +36,22 @@ function ProductListingPage() {
   const categoryParam = searchParams.get('category');
   const brandParam = searchParams.get('brand');
 
+  const [products, setProducts] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+
   // Ordenação começa em "Menor preço"
   const [order, setOrder] = useState('lowest');
   const [selected, setSelected] = useState(filtrosVazios);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+
+  // Busca os produtos na API
+  useEffect(() => {
+    getProducts()
+      .then((lista) => setProducts(lista))
+      .catch(() => setErro('Não foi possível carregar os produtos. Tente novamente.'))
+      .finally(() => setCarregando(false));
+  }, []);
 
   // Se a URL trouxer categoria ou marca, já marca o filtro
   useEffect(() => {
@@ -77,7 +90,7 @@ function ProductListingPage() {
         ? getFinalPrice(a) - getFinalPrice(b)
         : getFinalPrice(b) - getFinalPrice(a)
     );
-  }, [filter, selected, order]);
+  }, [products, filter, selected, order]);
 
   const temFiltroAtivo = Object.values(selected).some((lista) => lista.length > 0);
   const quantidade = filteredProducts.length;
@@ -160,7 +173,15 @@ function ProductListingPage() {
         </aside>
 
         <Section title={titulo} titleAlign="left" className="min-w-0 flex-1">
-          <ProductListing products={filteredProducts} columns={3} />
+          {carregando && (
+            <p className="py-16 text-center text-dark-gray-3">Carregando...</p>
+          )}
+          {erro && (
+            <p className="py-16 text-center text-error">{erro}</p>
+          )}
+          {!carregando && !erro && (
+            <ProductListing products={filteredProducts} columns={3} />
+          )}
         </Section>
       </div>
     </Layout>

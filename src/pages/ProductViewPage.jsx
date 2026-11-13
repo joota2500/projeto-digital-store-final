@@ -8,17 +8,52 @@ import Gallery from '../components/Gallery';
 import BuyBox from '../components/BuyBox';
 import ProductOptions from '../components/ProductOptions';
 
-import { products, getProductById, categoryLabels } from '../data/products';
+import { getProducts } from '../services/api';
+import { categoryLabels } from '../data/products';
 
 function ProductViewPage() {
   const { id } = useParams();
-  const product = getProductById(id);
+
+  const [product, setProduct] = useState(null);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
   const [adicionado, setAdicionado] = useState(false);
 
-  // Limpa a mensagem ao abrir outro produto
+  // Busca o produto e os recomendados quando o ID da URL muda
   useEffect(() => {
+    setCarregando(true);
+    setErro(null);
     setAdicionado(false);
+    setProduct(null);
+
+    getProducts()
+      .then((lista) => {
+        const encontrado = lista.find((item) => item.id === Number(id));
+        setProduct(encontrado ?? null);
+        setRecommendedProducts(
+          lista.filter((item) => item.id !== Number(id)).slice(0, 4)
+        );
+      })
+      .catch(() => setErro('Não foi possível carregar o produto. Tente novamente.'))
+      .finally(() => setCarregando(false));
   }, [id]);
+
+  if (carregando) {
+    return (
+      <Layout>
+        <p className="py-24 text-center text-dark-gray-3">Carregando...</p>
+      </Layout>
+    );
+  }
+
+  if (erro) {
+    return (
+      <Layout>
+        <p className="py-24 text-center text-error">{erro}</p>
+      </Layout>
+    );
+  }
 
   if (!product) {
     return (
@@ -36,9 +71,6 @@ function ProductViewPage() {
   }
 
   const categoria = categoryLabels[product.category] ?? product.category;
-  const recommendedProducts = products
-    .filter((item) => item.id !== product.id)
-    .slice(0, 4);
 
   return (
     <Layout>

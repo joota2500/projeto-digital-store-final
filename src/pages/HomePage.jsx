@@ -1,11 +1,16 @@
+import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import Gallery from '../components/Gallery';
 import Section from '../components/Section';
 import ProductListing from '../components/ProductListing';
-import { products } from '../data/products';
+import { getProducts } from '../services/api';
 
 // Página inicial da Digital Store
 export default function HomePage() {
+  const [products, setProducts] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+
   // Imagens do carrossel principal
   const homeSlides = [1, 2, 3, 4, 5, 6, 7, 8].map((numero) => ({
     src: `/home-slide-${numero}.jpeg`,
@@ -16,6 +21,14 @@ export default function HomePage() {
     { src: '/collection-2.png', alt: 'Coleção Adidas' },
     { src: '/collection-3.png', alt: 'Novo Beats Bass' },
   ];
+
+  // Busca os produtos na API quando a página abre
+  useEffect(() => {
+    getProducts()
+      .then((lista) => setProducts(lista))
+      .catch(() => setErro('Não foi possível carregar os produtos. Tente novamente.'))
+      .finally(() => setCarregando(false));
+  }, []);
 
   // Os 8 primeiros produtos aparecem em "Produtos em alta"
   const produtosEmAlta = products.slice(0, 8);
@@ -55,7 +68,15 @@ export default function HomePage() {
           titleAlign="left"
           link={{ text: 'Ver todos', href: '/products' }}
         >
-          <ProductListing products={produtosEmAlta} columns={4} />
+          {carregando && (
+            <p className="py-16 text-center text-dark-gray-3">Carregando...</p>
+          )}
+          {erro && (
+            <p className="py-16 text-center text-error">{erro}</p>
+          )}
+          {!carregando && !erro && (
+            <ProductListing products={produtosEmAlta} columns={4} />
+          )}
         </Section>
       </div>
     </Layout>

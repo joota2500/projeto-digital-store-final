@@ -2,6 +2,7 @@
   "name": "projeto-vendas",
   "private": true,
   "version": "0.0.0",
+  "author": "João Victor Rocha Costa",
   "type": "module",
   "scripts": {
     "dev": "vite",
