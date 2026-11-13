@@ -13,6 +13,8 @@ db.Product = require('./Product')(sequelize);
 db.ProductImage = require('./ProductImage')(sequelize);
 db.ProductOption = require('./ProductOption')(sequelize);
 db.ProductCategory = require('./ProductCategory')(sequelize);
+db.Order = require('./Order')(sequelize);
+db.OrderItem = require('./OrderItem')(sequelize);
 
 // Liga os relacionamentos declarados em cada model
 Object.keys(db).forEach((nome) => {

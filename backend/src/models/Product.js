@@ -70,6 +70,11 @@ module.exports = (sequelize) => {
       otherKey: 'category_id',
       as: 'categories',
     });
+
+    Product.hasMany(models.OrderItem, {
+      foreignKey: 'product_id',
+      as: 'orderItems',
+    });
   };
 
   return Product;
