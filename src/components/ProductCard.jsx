@@ -18,7 +18,7 @@ export default function ProductCard({ product }) {
       {/* Área da imagem com fundo branco */}
       <div className="relative overflow-hidden rounded bg-white">
         {temDesconto && (
-          <span className="absolute top-3 left-3 rounded-full bg-lime px-3 py-1 text-xs font-bold text-dark-gray-2">
+          <span className="absolute top-2 left-2 rounded-full bg-lime px-2 py-0.5 text-[10px] font-bold text-dark-gray-2 md:top-3 md:left-3 md:px-3 md:py-1 md:text-xs">
             {porcentagem}% OFF
           </span>
         )}
@@ -32,26 +32,26 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Categoria fixa "Tênis", como no design */}
-      <p className="mt-3 text-xs font-bold text-light-gray">
+      <p className="mt-2 text-[10px] font-bold text-light-gray md:mt-3 md:text-xs">
         Tênis
       </p>
 
-      <h3 className="mt-1 line-clamp-2 text-base text-dark-gray-2 md:text-2xl md:leading-snug">
+      <h3 className="mt-0.5 line-clamp-2 text-sm leading-snug text-dark-gray-2 md:text-lg">
         {name}
       </h3>
 
       <p className="mt-1 flex flex-wrap items-baseline gap-x-3">
         {temDesconto ? (
           <>
-            <del className="text-lg text-light-gray md:text-2xl">
+            <del className="text-sm text-light-gray md:text-lg">
               {formatPrice(price)}
             </del>
-            <span className="text-lg font-bold text-dark-gray md:text-2xl">
+            <span className="text-sm font-bold text-dark-gray md:text-lg">
               {formatPrice(priceDiscount)}
             </span>
           </>
         ) : (
-          <span className="text-lg font-bold text-dark-gray md:text-2xl">
+          <span className="text-sm font-bold text-dark-gray md:text-lg">
             {formatPrice(price)}
           </span>
         )}

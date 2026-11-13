@@ -17,9 +17,9 @@ function BuyBox({
   const nota = Number(stars).toFixed(1).replace('.', ',');
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-3.5 md:gap-5">
       <div>
-        <h1 className="text-2xl leading-tight font-bold text-dark-gray md:text-[32px]">
+        <h1 className="text-xl leading-tight font-bold text-dark-gray md:text-[32px]">
           {name}
         </h1>
         <p className="mt-2 text-xs text-dark-gray-3">
@@ -46,7 +46,7 @@ function BuyBox({
       <p className="flex flex-wrap items-baseline gap-3">
         {temDesconto ? (
           <>
-            <span className="text-[32px] font-bold text-dark-gray-2">
+            <span className="text-2xl font-bold text-dark-gray-2 md:text-[32px]">
               {formatPrice(priceDiscount)}
             </span>
             <del className="text-base text-light-gray-2">
@@ -54,7 +54,7 @@ function BuyBox({
             </del>
           </>
         ) : (
-          <span className="text-[32px] font-bold text-dark-gray-2">
+          <span className="text-2xl font-bold text-dark-gray-2 md:text-[32px]">
             {formatPrice(price)}
           </span>
         )}
@@ -74,7 +74,7 @@ function BuyBox({
       <button
         type="button"
         onClick={onBuy}
-        className="h-12 w-full rounded-lg bg-warning text-base font-bold tracking-wide text-white uppercase transition hover:brightness-95 md:w-[220px]"
+        className="h-11 w-full rounded-lg bg-warning text-sm font-bold tracking-wide text-white uppercase transition hover:brightness-95 md:h-12 md:w-[220px] md:text-base"
       >
         Comprar
       </button>

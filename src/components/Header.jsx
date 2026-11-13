@@ -55,7 +55,7 @@ function Header() {
   }
 
   function estiloLink({ isActive }) {
-    return `pb-1 text-base transition-colors ${
+    return `pb-1 text-sm transition-colors md:text-base ${
       isActive
         ? 'border-b-2 border-primary font-bold text-primary'
         : 'border-b-2 border-transparent text-dark-gray-2 hover:text-primary'
@@ -64,7 +64,7 @@ function Header() {
 
   return (
     <header className="bg-white">
-      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-6 gap-y-4 px-4 pt-6 pb-4 md:px-10 md:pt-10 md:pb-8 xl:gap-x-10 xl:px-[100px]">
+      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-3 gap-y-3 px-4 pt-3 pb-3 md:gap-x-6 md:px-10 md:pt-8 md:pb-6 xl:gap-x-10 xl:px-[100px]">
 
         {/* Botão do menu no celular */}
         <button
@@ -74,18 +74,18 @@ function Header() {
           aria-expanded={menuAberto}
           onClick={() => setMenuAberto((aberto) => !aberto)}
         >
-          {menuAberto ? <X size={24} /> : <Menu size={24} />}
+          {menuAberto ? <X size={22} /> : <Menu size={22} />}
         </button>
 
         <Link to="/" aria-label="Página inicial" className="shrink-0">
-          <Logo className="max-lg:h-[34px] max-lg:w-auto max-md:h-[30px]" />
+          <Logo className="h-6 w-auto md:h-[34px] lg:h-11" />
         </Link>
 
         {/* Campo de busca */}
         <form
           role="search"
           onSubmit={realizarBusca}
-          className="order-last flex h-[60px] w-full items-center rounded-lg bg-light-gray-3 px-5 lg:order-none lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
+          className="order-last flex h-10 w-full items-center rounded-lg bg-light-gray-3 px-3 md:h-12 md:px-5 lg:order-none lg:h-[60px] lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
         >
           <label htmlFor="search" className="sr-only">
             Pesquisar produto
@@ -96,15 +96,15 @@ function Header() {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             placeholder="Pesquisar produto..."
-            className="h-full flex-1 bg-transparent text-base text-dark-gray-2 outline-none placeholder:text-light-gray"
+            className="h-full flex-1 bg-transparent text-sm text-dark-gray-2 outline-none placeholder:text-light-gray md:text-base"
           />
           <button type="submit" aria-label="Buscar" className="text-light-gray hover:text-primary">
-            <Search size={22} />
+            <Search size={18} className="md:size-[22px]" />
           </button>
         </form>
 
         {/* Cadastro, login (ou sair) e carrinho */}
-        <div className="ml-auto flex shrink-0 items-center gap-6 lg:ml-0 lg:gap-8">
+        <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-6 lg:ml-0 lg:gap-8">
           {usuario ? (
             <>
               <span className="hidden max-w-[180px] truncate text-sm text-dark-gray-2 md:inline">
@@ -113,7 +113,7 @@ function Header() {
               <button
                 type="button"
                 onClick={sair}
-                className="hidden h-10 w-[114px] items-center justify-center rounded bg-primary text-sm font-bold text-white transition-colors hover:bg-tertiary md:flex"
+                className="hidden h-9 w-[100px] items-center justify-center rounded bg-primary text-sm font-bold text-white transition-colors hover:bg-tertiary md:flex md:h-10 md:w-[114px]"
               >
                 Sair
               </button>
@@ -122,22 +122,22 @@ function Header() {
             <>
               <Link
                 to="/cadastro"
-                className="hidden text-base text-dark-gray-2 underline decoration-dark-gray-2 md:inline"
+                className="hidden text-sm text-dark-gray-2 underline decoration-dark-gray-2 md:inline md:text-base"
               >
                 Cadastre-se
               </Link>
               <Link
                 to="/login"
-                className="hidden h-10 w-[114px] items-center justify-center rounded bg-primary text-sm font-bold text-white transition-colors hover:bg-tertiary md:flex"
+                className="hidden h-9 w-[100px] items-center justify-center rounded bg-primary text-sm font-bold text-white transition-colors hover:bg-tertiary md:flex md:h-10 md:w-[114px]"
               >
                 Entrar
               </Link>
             </>
           )}
           <Link to="/carrinho" aria-label="Carrinho de compras" className="relative inline-flex">
-            <img src={miniCart} alt="" className="size-6" />
+            <img src={miniCart} alt="" className="size-5 md:size-6" />
             {quantidadeTotal > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-white">
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-white md:-top-2 md:-right-2 md:h-5 md:min-w-5">
                 {quantidadeTotal > 99 ? '99+' : quantidadeTotal}
               </span>
             )}
@@ -160,9 +160,9 @@ function Header() {
 
       {/* Menu no celular */}
       {menuAberto && (
-        <nav aria-label="Navegação mobile" className="border-t border-light-gray-2 px-4 py-6 md:hidden">
-          <p className="mb-4 text-base font-bold text-dark-gray-2">Páginas</p>
-          <ul className="flex flex-col gap-4">
+        <nav aria-label="Navegação mobile" className="border-t border-light-gray-2 px-4 py-4 md:hidden">
+          <p className="mb-3 text-sm font-bold text-dark-gray-2">Páginas</p>
+          <ul className="flex flex-col gap-3">
             {links.map((link) => (
               <li key={link.to}>
                 <NavLink
@@ -176,10 +176,10 @@ function Header() {
               </li>
             ))}
           </ul>
-          <hr className="my-6 border-light-gray-2" />
+          <hr className="my-4 border-light-gray-2" />
           {usuario ? (
             <>
-              <p className="mb-4 truncate text-center text-sm text-dark-gray-2">
+              <p className="mb-3 truncate text-center text-sm text-dark-gray-2">
                 Olá, {usuario.email}
               </p>
               <button
@@ -202,7 +202,7 @@ function Header() {
               <Link
                 to="/cadastro"
                 onClick={() => setMenuAberto(false)}
-                className="mt-4 block text-center text-base text-dark-gray-2 underline"
+                className="mt-3 block text-center text-sm text-dark-gray-2 underline"
               >
                 Cadastre-se
               </Link>

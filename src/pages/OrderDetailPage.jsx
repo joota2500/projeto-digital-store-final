@@ -85,7 +85,7 @@ function OrderDetailPage() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-10 md:py-10 xl:px-[100px]">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-10 md:py-10 xl:px-[100px]">
         <Link to="/meus-pedidos" className="text-sm font-bold text-primary hover:underline">
           ← Voltar para Meus Pedidos
         </Link>
@@ -110,14 +110,14 @@ function OrderDetailPage() {
         )}
 
         {!carregando && !erro && pedido && (
-          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="mt-4 grid gap-4 md:mt-6 md:gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-sm text-dark-gray-3">
                     Pedido #{String(pedido.id).padStart(4, '0')}
                   </p>
-                  <h1 className="mt-1 text-2xl font-bold text-dark-gray">
+                  <h1 className="mt-1 text-xl font-bold text-dark-gray md:text-2xl">
                     {formatarDataPedido(pedido.created_at)}
                   </h1>
                 </div>
@@ -145,7 +145,7 @@ function OrderDetailPage() {
                 </ol>
               )}
 
-              <section className="mt-8 rounded-lg bg-white p-5 md:p-6">
+              <section className="mt-6 rounded-lg bg-white p-4 md:mt-8 md:p-6">
                 <h2 className="text-base font-bold text-dark-gray">Itens</h2>
                 <ul className="mt-4 flex flex-col gap-4">
                   {pedido.items.map((item) => (
@@ -155,7 +155,7 @@ function OrderDetailPage() {
                           <img
                             src={item.product_image}
                             alt={item.product_name}
-                            className="size-20 rounded object-cover"
+                            className="size-16 rounded object-cover md:size-20"
                           />
                         </Link>
                       ) : (
@@ -182,7 +182,7 @@ function OrderDetailPage() {
             </div>
 
             <aside className="flex h-fit flex-col gap-5">
-              <section className="rounded-lg bg-white p-5 md:p-6">
+              <section className="rounded-lg bg-white p-4 md:p-6">
                 <h2 className="text-base font-bold text-dark-gray">Entrega</h2>
                 <address className="mt-3 text-sm leading-6 text-dark-gray-2 not-italic">
                   {pedido.recipient}
@@ -198,7 +198,7 @@ function OrderDetailPage() {
                 </address>
               </section>
 
-              <section className="rounded-lg bg-white p-5 md:p-6">
+              <section className="rounded-lg bg-white p-4 md:p-6">
                 <h2 className="text-base font-bold text-dark-gray">Pagamento</h2>
                 <p className="mt-3 text-sm text-dark-gray-2">
                   {pagamentoLabels[pedido.payment_method] || pedido.payment_method}

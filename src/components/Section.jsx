@@ -6,16 +6,16 @@ const Section = ({ title, titleAlign = 'left', link, children, className = '' })
   const isExternal = link?.href?.startsWith('http');
 
   const linkClassName =
-    'flex items-center gap-2 text-sm text-primary hover:underline md:text-lg';
+    'flex items-center gap-1.5 text-xs text-primary hover:underline md:gap-2 md:text-lg';
 
   return (
     <section className={className}>
       <div
-        className={`mb-5 flex items-center gap-4 ${
+        className={`mb-3 flex items-center gap-3 md:mb-5 md:gap-4 ${
           titleAlign === 'center' ? 'justify-center' : 'justify-between'
         }`}
       >
-        <h2 className="text-lg font-bold text-dark-gray-2 md:text-2xl">
+        <h2 className="text-base font-bold text-dark-gray-2 md:text-2xl">
           {title}
         </h2>
 

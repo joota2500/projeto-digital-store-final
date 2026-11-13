@@ -45,7 +45,7 @@ export default function Gallery({
       : `1440 / ${heightNumber}`;
 
   const arrowClass =
-    'absolute top-1/2 z-10 flex size-12 -translate-y-1/2 items-center justify-center rounded-full transition hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent';
+    'absolute top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full transition hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent md:size-12';
 
   return (
     <div
@@ -101,14 +101,14 @@ export default function Gallery({
 
         {/* Bolinhas na parte de baixo */}
         {showDots && images.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-3">
+          <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 md:bottom-4 md:gap-3">
             {images.map((image, index) => (
               <button
                 type="button"
                 key={getSrc(image)}
                 aria-label={`Ir para imagem ${index + 1}`}
                 onClick={() => setCurrent(index)}
-                className={`size-3 rounded-full transition-colors ${
+                className={`size-2.5 rounded-full transition-colors md:size-3 ${
                   index === current ? 'bg-primary' : 'bg-light-gray-2'
                 }`}
               />
@@ -119,7 +119,7 @@ export default function Gallery({
 
       {/* Miniaturas (página do produto) */}
       {showThumbs && images.length > 1 && (
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:gap-5">
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 md:mt-5 md:gap-5">
           {images.map((image, index) => (
             <button
               type="button"

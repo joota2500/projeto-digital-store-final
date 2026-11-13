@@ -68,7 +68,7 @@ function ProductViewPage() {
   if (carregando) {
     return (
       <Layout>
-        <p className="py-24 text-center text-dark-gray-3">Carregando...</p>
+        <p className="py-16 text-center text-sm text-dark-gray-3">Carregando...</p>
       </Layout>
     );
   }
@@ -100,10 +100,10 @@ function ProductViewPage() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-10 md:py-10 xl:px-[100px]">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-10 md:py-10 xl:px-[100px]">
 
         {/* Breadcrumb */}
-        <nav aria-label="Trilha de navegação" className="mb-6 text-sm text-dark-gray-2">
+        <nav aria-label="Trilha de navegação" className="mb-4 text-xs text-dark-gray-2 md:mb-6 md:text-sm">
           <ol className="flex flex-wrap gap-1">
             <li>
               <Link to="/" className="font-bold hover:text-primary">Home</Link>
@@ -118,7 +118,7 @@ function ProductViewPage() {
           </ol>
         </nav>
 
-        <div className="flex flex-col gap-8 lg:flex-row xl:gap-10">
+        <div className="flex flex-col gap-5 lg:flex-row lg:gap-8 xl:gap-10">
           <div className="w-full shrink-0 lg:w-[55%] lg:max-w-[700px]">
             {/* A key faz a galeria voltar para a primeira imagem ao trocar de produto */}
             <Gallery
@@ -189,7 +189,7 @@ function ProductViewPage() {
           title="Produtos recomendados"
           titleAlign="left"
           link={{ text: 'Ver todos', href: '/products' }}
-          className="mt-16 md:mt-20"
+          className="mt-10 md:mt-20"
         >
           <ProductListing products={recommendedProducts} columns={4} />
         </Section>

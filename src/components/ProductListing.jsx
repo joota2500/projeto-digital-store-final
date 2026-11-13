@@ -7,14 +7,14 @@ export default function ProductListing({ products = [], columns = 4 }) {
 
   if (products.length === 0) {
     return (
-      <p className="py-16 text-center text-base text-dark-gray-3">
+      <p className="py-12 text-center text-sm text-dark-gray-3 md:text-base">
         Nenhum produto encontrado.
       </p>
     );
   }
 
   return (
-    <ul className={`grid grid-cols-2 gap-x-4 gap-y-8 md:gap-x-6 ${colsClass}`}>
+    <ul className={`grid grid-cols-2 gap-x-3 gap-y-5 md:gap-x-6 md:gap-y-8 ${colsClass}`}>
       {products.map((product) => (
         <li key={product.id}>
           <ProductCard product={product} />

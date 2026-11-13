@@ -59,8 +59,8 @@ function OrdersPage() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-10 md:py-10 xl:px-[100px]">
-        <h1 className="text-2xl font-bold text-dark-gray">Meus Pedidos</h1>
+      <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-10 md:py-10 xl:px-[100px]">
+        <h1 className="text-xl font-bold text-dark-gray md:text-2xl">Meus Pedidos</h1>
         <p className="mt-1 text-sm text-dark-gray-3">
           Acompanhe as compras que você fez nesta loja.
         </p>
@@ -112,9 +112,9 @@ function OrdersPage() {
         )}
 
         {!carregando && !erro && pedidos.length > 0 && (
-          <ul className="mt-8 flex flex-col gap-5">
+          <ul className="mt-5 flex flex-col gap-4 md:mt-8 md:gap-5">
             {pedidos.map((pedido) => (
-              <li key={pedido.id} className="rounded-lg bg-white p-5 md:p-6">
+              <li key={pedido.id} className="rounded-lg bg-white p-4 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-sm text-dark-gray-3">

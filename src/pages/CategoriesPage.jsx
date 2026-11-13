@@ -41,9 +41,9 @@ function CategoriesPage() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-10 md:py-10 xl:px-[100px]">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 md:px-10 md:py-10 xl:px-[100px]">
         <Section title="Categorias" titleAlign="left">
-          <p className="mb-8 -mt-2 text-base text-dark-gray-3">
+          <p className="mb-5 -mt-1 text-sm text-dark-gray-3 md:mb-8 md:text-base">
             Escolha uma categoria para ver os produtos da loja.
           </p>
 
@@ -54,7 +54,7 @@ function CategoriesPage() {
             <p className="py-16 text-center text-error">{erro}</p>
           )}
           {!carregando && !erro && (
-            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="grid grid-cols-2 gap-3 md:gap-6 lg:grid-cols-4">
               {categorias.map((categoria) => (
                 <li key={categoria.slug}>
                   <Link
@@ -68,15 +68,15 @@ function CategoriesPage() {
                         className="aspect-[292/321] w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <div className="p-5">
-                      <h3 className="text-lg font-bold text-dark-gray-2 md:text-xl">
+                    <div className="p-3 md:p-5">
+                      <h3 className="text-sm font-bold text-dark-gray-2 md:text-xl">
                         {categoria.nome}
                       </h3>
-                      <p className="mt-1 text-sm text-dark-gray-3">
+                      <p className="mt-0.5 text-xs text-dark-gray-3 md:mt-1 md:text-sm">
                         {categoria.quantidade}{' '}
                         {categoria.quantidade === 1 ? 'produto' : 'produtos'}
                       </p>
-                      <p className="mt-3 text-sm font-bold text-primary">
+                      <p className="mt-2 text-xs font-bold text-primary md:mt-3 md:text-sm">
                         Ver produtos
                       </p>
                     </div>

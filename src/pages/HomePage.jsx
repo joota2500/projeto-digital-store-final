@@ -42,10 +42,10 @@ export default function HomePage() {
         height="681"
         showDots
         className="mx-auto"
-        slideClassName="max-sm:min-h-[260px] sm:max-md:min-h-[320px]"
+        slideClassName="max-sm:min-h-[200px] sm:max-md:min-h-[300px]"
       />
 
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-14 px-4 py-14 md:gap-20 md:px-10 md:py-20 xl:px-[100px]">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-8 md:gap-20 md:px-10 md:py-20 xl:px-[100px]">
         {/* Coleções: só as 3 imagens, sem selo e sem botão */}
         <Section title="Coleções em destaque" titleAlign="center">
           <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
@@ -69,7 +69,7 @@ export default function HomePage() {
           link={{ text: 'Ver todos', href: '/products' }}
         >
           {carregando && (
-            <p className="py-16 text-center text-dark-gray-3">Carregando...</p>
+            <p className="py-12 text-center text-sm text-dark-gray-3">Carregando...</p>
           )}
           {erro && (
             <p className="py-16 text-center text-error">{erro}</p>

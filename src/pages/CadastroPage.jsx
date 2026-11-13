@@ -5,7 +5,7 @@ import { cadastrarUsuario, login } from '../services/api';
 import { destinoSeguro } from '../data/orders';
 
 const campo =
-  'h-[60px] w-full rounded-lg bg-light-gray-3 px-5 text-base text-dark-gray-2 outline-none placeholder:text-light-gray';
+  'h-11 w-full rounded-lg bg-light-gray-3 px-4 text-sm text-dark-gray-2 outline-none placeholder:text-light-gray md:h-[60px] md:px-5 md:text-base';
 
 function CadastroPage() {
   const navigate = useNavigate();
@@ -58,9 +58,9 @@ function CadastroPage() {
 
   return (
     <Layout>
-      <div className="mx-auto flex max-w-[1440px] justify-center px-4 py-14 md:px-10 md:py-20 xl:px-[100px]">
-        <div className="w-full max-w-[480px] rounded bg-white p-8 md:p-10">
-          <h1 className="text-2xl font-bold text-dark-gray">
+      <div className="mx-auto flex max-w-[1440px] justify-center px-4 py-8 md:px-10 md:py-16 xl:px-[100px]">
+        <div className="w-full max-w-[480px] rounded bg-white p-5 md:p-10">
+          <h1 className="text-xl font-bold text-dark-gray md:text-2xl">
             Crie sua conta
           </h1>
           <p className="mt-2 text-sm text-dark-gray-3">
@@ -70,7 +70,7 @@ function CadastroPage() {
             </Link>
           </p>
 
-          <form onSubmit={enviar} className="mt-8 flex flex-col gap-5">
+          <form onSubmit={enviar} className="mt-5 flex flex-col gap-4 md:mt-8 md:gap-5">
             <div>
               <label htmlFor="firstname" className="mb-2 block text-sm font-bold text-dark-gray-2">
                 Nome

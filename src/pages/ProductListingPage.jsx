@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 
 import Layout from './Layout';
 import Section from '../components/Section';
@@ -28,6 +28,46 @@ function correspondeABusca(produto, termo) {
   return normalizar(termo)
     .split(/\s+/)
     .every((palavra) => alvo.includes(palavra));
+}
+
+function PainelFiltros({ selected, temFiltroAtivo, onLimpar, onChange, onChangeUnico }) {
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <h2 className="text-base font-bold text-dark-gray-2">Filtrar por</h2>
+        {temFiltroAtivo && (
+          <button
+            type="button"
+            onClick={onLimpar}
+            className="text-sm text-primary hover:underline"
+          >
+            Limpar
+          </button>
+        )}
+      </div>
+
+      <hr className="mt-4 mb-4 border-light-gray-2" />
+
+      {['brand', 'category', 'gender'].map((grupo) => (
+        <FilterGroup
+          key={grupo}
+          title={filterOptions[grupo].title}
+          inputType="checkbox"
+          options={filterOptions[grupo].options}
+          selected={selected[grupo]}
+          onChange={(valor, marcado) => onChange(grupo, valor, marcado)}
+        />
+      ))}
+
+      <FilterGroup
+        title={filterOptions.condition.title}
+        inputType="radio"
+        options={filterOptions.condition.options}
+        selected={selected.condition}
+        onChange={(valor, marcado) => onChangeUnico('condition', valor, marcado)}
+      />
+    </>
+  );
 }
 
 function ProductListingPage() {
@@ -62,6 +102,16 @@ function ProductListingPage() {
       brand: brandParam ? [brandParam] : [],
     });
   }, [categoryParam, brandParam]);
+
+  // Trava o scroll do fundo quando a gaveta de filtros está aberta
+  useEffect(() => {
+    if (!mostrarFiltros) return undefined;
+    const anterior = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = anterior;
+    };
+  }, [mostrarFiltros]);
 
   function atualizarFiltro(grupo, valor, marcado, somenteUm = false) {
     setSelected((atual) => ({
@@ -99,21 +149,29 @@ function ProductListingPage() {
     quantidade === 1 ? 'produto' : 'produtos'
   }`;
 
+  const propsFiltros = {
+    selected,
+    temFiltroAtivo,
+    onLimpar: () => setSelected(filtrosVazios),
+    onChange: (grupo, valor, marcado) => atualizarFiltro(grupo, valor, marcado),
+    onChangeUnico: (grupo, valor, marcado) => atualizarFiltro(grupo, valor, marcado, true),
+  };
+
   return (
     <Layout>
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-8 md:px-10 md:py-10 lg:flex-row lg:items-start lg:gap-7 xl:px-[100px]">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 md:px-10 md:py-8 lg:flex-row lg:items-start lg:gap-7 xl:px-[100px]">
 
-        {/* Barra lateral: ordenar + filtrar */}
-        <aside className="flex w-full shrink-0 flex-col gap-6 lg:w-[308px]">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="sort" className="text-base text-dark-gray-2">
+        {/* No desktop: ordenar + filtros na lateral. No celular: só o select e o botão. */}
+        <aside className="flex w-full shrink-0 items-center gap-2 lg:w-[308px] lg:flex-col lg:items-stretch lg:gap-6">
+          <div className="flex min-w-0 flex-1 flex-col gap-1 lg:gap-2">
+            <label htmlFor="sort" className="text-xs text-dark-gray-2 md:text-sm lg:text-base">
               Ordenar por
             </label>
             <select
               id="sort"
               value={order}
               onChange={(e) => setOrder(e.target.value)}
-              className="h-[60px] w-full cursor-pointer rounded border border-dark-gray-2 bg-transparent px-4 text-base text-dark-gray-2 outline-none focus:border-primary lg:w-[308px]"
+              className="h-10 w-full cursor-pointer rounded border border-dark-gray-2 bg-transparent px-3 text-sm text-dark-gray-2 outline-none focus:border-primary md:h-12 md:text-base lg:h-[60px] lg:w-[308px]"
             >
               <option value="lowest">Menor preço</option>
               <option value="highest">Maior preço</option>
@@ -121,64 +179,69 @@ function ProductListingPage() {
             </select>
           </div>
 
-          {/* No celular o painel de filtros começa escondido */}
           <button
             type="button"
-            onClick={() => setMostrarFiltros((aberto) => !aberto)}
-            aria-expanded={mostrarFiltros}
-            className="flex h-12 items-center justify-center gap-2 rounded bg-primary text-sm font-bold text-white lg:hidden"
+            onClick={() => setMostrarFiltros(true)}
+            className="mt-5 flex h-10 shrink-0 items-center justify-center gap-2 rounded bg-primary px-3 text-sm font-bold text-white lg:hidden"
           >
-            <SlidersHorizontal size={18} />
-            {mostrarFiltros ? 'Esconder filtros' : 'Filtrar'}
+            <SlidersHorizontal size={16} />
+            Filtrar
           </button>
 
-          <div
-            className={`rounded bg-white p-[30px] lg:block lg:w-[308px] ${
-              mostrarFiltros ? 'block' : 'hidden'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-dark-gray-2">Filtrar por</h2>
-              {temFiltroAtivo && (
-                <button
-                  type="button"
-                  onClick={() => setSelected(filtrosVazios)}
-                  className="text-sm text-primary hover:underline"
-                >
-                  Limpar
-                </button>
-              )}
-            </div>
-
-            <hr className="mt-5 mb-5 border-light-gray-2" />
-
-            {['brand', 'category', 'gender'].map((grupo) => (
-              <FilterGroup
-                key={grupo}
-                title={filterOptions[grupo].title}
-                inputType="checkbox"
-                options={filterOptions[grupo].options}
-                selected={selected[grupo]}
-                onChange={(valor, marcado) => atualizarFiltro(grupo, valor, marcado)}
-              />
-            ))}
-
-            <FilterGroup
-              title={filterOptions.condition.title}
-              inputType="radio"
-              options={filterOptions.condition.options}
-              selected={selected.condition}
-              onChange={(valor, marcado) => atualizarFiltro('condition', valor, marcado, true)}
-            />
+          {/* Filtros no desktop */}
+          <div className="hidden rounded bg-white p-6 lg:block lg:w-[308px]">
+            <PainelFiltros {...propsFiltros} />
           </div>
         </aside>
 
+        {/* Gaveta de filtros no celular */}
+        {mostrarFiltros && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <button
+              type="button"
+              aria-label="Fechar filtros"
+              className="absolute inset-0 bg-black/40"
+              onClick={() => setMostrarFiltros(false)}
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filtros"
+              className="absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-white shadow-xl"
+            >
+              <div className="flex items-center justify-between border-b border-light-gray-2 px-4 py-3">
+                <p className="text-base font-bold text-dark-gray-2">Filtros</p>
+                <button
+                  type="button"
+                  aria-label="Fechar"
+                  onClick={() => setMostrarFiltros(false)}
+                  className="text-dark-gray-2"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4">
+                <PainelFiltros {...propsFiltros} />
+              </div>
+              <div className="border-t border-light-gray-2 p-4">
+                <button
+                  type="button"
+                  onClick={() => setMostrarFiltros(false)}
+                  className="flex h-11 w-full items-center justify-center rounded bg-primary text-sm font-bold text-white"
+                >
+                  Ver {quantidade} {quantidade === 1 ? 'produto' : 'produtos'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <Section title={titulo} titleAlign="left" className="min-w-0 flex-1">
           {carregando && (
-            <p className="py-16 text-center text-dark-gray-3">Carregando...</p>
+            <p className="py-12 text-center text-dark-gray-3">Carregando...</p>
           )}
           {erro && (
-            <p className="py-16 text-center text-error">{erro}</p>
+            <p className="py-12 text-center text-error">{erro}</p>
           )}
           {!carregando && !erro && (
             <ProductListing products={filteredProducts} columns={3} />
